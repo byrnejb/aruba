@@ -3,6 +3,9 @@ Feature: file system commands
   In order to specify commands that load files
   As a developer using Cucumber
   I want to create temporary files
+
+  Background:
+    Then clean up the working directory
   
   Scenario: create a dir
     Given a directory named "foo/bar"
@@ -15,7 +18,7 @@ Feature: file system commands
       puts "hello world"
       """
     When I run "ruby foo/bar/example.rb"
-    Then I should see "hello world"
+    Then I should see "hello world" in the output
 
   Scenario: append to a file
     Given a file named "foo/bar/example.rb" with:
@@ -27,14 +30,16 @@ Feature: file system commands
       puts "this was appended"
       """
     When I run "ruby foo/bar/example.rb"
-    Then I should see "hello world"
-    And I should see "this was appended"
+    Then I should see "hello world" in the output
+    And I should see "this was appended" in the output
+
 
   Scenario: clean up files generated in previous scenario
     When I run "ruby foo/bar/example.rb"
     Then the exit status should be 1
-    And I should see "No such file or directory -- foo/bar/example.rb"
-  
+    And I should see "No such file or directory -- foo/bar/example.rb" in the output
+
+
   Scenario: change to a subdir
     Given a file named "foo/bar/example.rb" with:
       """
@@ -42,7 +47,7 @@ Feature: file system commands
       """
     When I cd to "foo/bar"
     And I run "ruby example.rb"
-    Then I should see "hello world"
+    Then I should see "hello world" in the output
 
   Scenario: Reset current directory from previous scenario
     When I run "ruby example.rb"
