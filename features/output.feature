@@ -6,15 +6,15 @@ Feature: Output
 
   Scenario: Detect subset of one-line output
     When I run "ruby -e 'puts \"hello world\"'"
-    Then I should see "hello world"
+    Then I should see "hello world" in the output
 
   Scenario: Detect subset of one-line output
     When I run "echo 'hello world'"
-    Then I should see "hello world"
+    Then I should see "hello world" in the output
 
   Scenario: Detect absence of one-line output
     When I run "ruby -e 'puts \"hello world\"'"
-    Then I should not see "good-bye"
+    Then I should not see "good-bye" in the output
 
   Scenario: Detect subset of multiline output
     When I run "ruby -e 'puts \"hello\\nworld\"'"
@@ -32,7 +32,7 @@ Feature: Output
 
   Scenario: Detect exact one-line output
     When I run "ruby -e 'puts \"hello world\"'"
-    Then I should see exactly "hello world\n"
+    Then I should see exactly "hello world\n" in the output
 
   Scenario: Detect exact multiline output
     When I run "ruby -e 'puts \"hello\\nworld\"'"
@@ -46,8 +46,8 @@ Feature: Output
   @announce
   Scenario: Detect subset of one-line output with regex
     When I run "ruby --version"
-    Then I should see "ruby"
-    And I should see matching /ruby ([\d]+\.[\d]+\.[\d]+)(p\d+)? \(.*$/
+    Then I should see "ruby" in the output
+    And I should see matching /ruby ([\d]+\.[\d]+\.[\d]+)(p\d+)? \(.*$/ in the output
 
   @announce
   Scenario: Detect subset of multiline output with regex
