@@ -17,6 +17,10 @@ module Api
     raise "#{current_dir} is not a directory." unless File.directory?(current_dir)
   end
 
+  def clean_up(dir = current_dir)
+    FileUtils.rm_rf(dir)
+  end
+
   def dirs
     @dirs ||= ['tmp/aruba']
   end
