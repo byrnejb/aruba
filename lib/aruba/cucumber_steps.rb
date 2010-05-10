@@ -27,6 +27,70 @@ Before('@announce') do
   @announce_cmd = true
 end
 
+#
+# :section: cucumber_steps matchers
+#
+#
+# When /am using rvm "([^\"]*)"$/ do |rvm_ruby_version|
+#
+# When /am using( an empty)? rvm gemset "([^\"]*)"$/ do |empty_gemset, rvm_gemset|
+#
+# When /am using rvm gemset "([^\"]*)" with Gemfile:$/ do |rvm_gemset, gemfile|#
+#
+# When /^a directory named "([^\"]*)"$/ do |dir_name|
+#
+# When /^a file named "([^\"]*)" with:$/ do |file_name, file_content|
+#
+# When /^an empty file named "([^\"]*)"$/ do |file_name|
+#
+# When /append to "([^\"]*)" with:$/ do |file_name, file_content|
+#
+# When /^I cd to "([^\"]*)"$/ do |dir|
+#
+# When /clean up the working directory/ do
+#
+# When /run "(.*)"$/ do |cmd|
+#
+# When /successfully run "(.*)"$/ do |cmd|
+#
+# When /should see "([^\"]*)" (?:in the output|on the console)$/ do |partial_output|
+#
+# When /should not see "([^\"]*)" (?:in the output|on the console)$/ do |partial_output|
+#
+# When /should see:$/ do |partial_output|
+#
+# When /should not see:$/ do |partial_output|
+#
+# When /should see exactly "([^\"]*)" (?:in the output|on the console)$/ do |exact_output|
+#
+# When /should see exactly:$/ do |exact_output|
+#
+# When /should see matching \/([^\/]*)\/ (?:in the output|on the console)$/ do |partial_output|
+#
+# When /should see matching:$/ do |partial_output|
+#
+# When /^the exit status should be (\d+)$/ do |exit_status|
+#
+# When /^the exit status should not be (\d+)$/ do |exit_status|
+#
+# When /^it should (pass|fail) with:$/ do |pass_fail, partial_output|
+#
+# When /^the stderr should contain "([^\"]*)"$/ do |partial_output|
+#
+# When /^the stdout should contain "([^\"]*)"$/ do |partial_output|
+#
+# When /^the stderr should not contain "([^\"]*)"$/ do |partial_output|
+#
+# When /^the stdout should not contain "([^\"]*)"$/ do |partial_output|
+#
+# When /^the following files should exist:$/ do |files|
+#
+# When /^the following files should not exist:$/ do |files|
+#
+# When /^the file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
+#
+# When /^the file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
+#
 
 When /am using rvm "([^\"]*)"$/ do |rvm_ruby_version|
   use_rvm(rvm_ruby_version)
