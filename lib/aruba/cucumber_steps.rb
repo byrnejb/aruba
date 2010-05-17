@@ -37,11 +37,11 @@ end
 #
 # When /am using rvm gemset "([^\"]*)" with Gemfile:$/ do |rvm_gemset, gemfile|#
 #
-# When /^a directory named "([^\"]*)"$/ do |dir_name|
+# When /directory named "([^\"]*)"$/ do |dir_name|
 #
-# When /^a file named "([^\"]*)" with:$/ do |file_name, file_content|
+# When /file named "([^\"]*)" with:$/ do |file_name, file_content|
 #
-# When /^an empty file named "([^\"]*)"$/ do |file_name|
+# When /empty file named "([^\"]*)"$/ do |file_name|
 #
 # When /append to "([^\"]*)" with:$/ do |file_name, file_content|
 #
@@ -53,43 +53,43 @@ end
 #
 # When /successfully run "(.*)"$/ do |cmd|
 #
-# When /should see "([^\"]*)" (?:in the output|on the console)$/ do |partial_output|
+# When /output should contain "([^"]*)"$/ do |partial_output|
 #
-# When /should not see "([^\"]*)" (?:in the output|on the console)$/ do |partial_output|
+# When /output should not contain "([^"]*)"$/ do |partial_output|
 #
-# When /should see:$/ do |partial_output|
+# When /output should contain:$/ do |partial_output|
 #
-# When /should not see:$/ do |partial_output|
+# When /output should not contain:$/ do |partial_output|
 #
-# When /should see exactly "([^\"]*)" (?:in the output|on the console)$/ do |exact_output|
+# When /output should contain exactly "([^"]*)"$/ do |exact_output|
 #
-# When /should see exactly:$/ do |exact_output|
+# When /output should contain exactly:$/ do |exact_output|
 #
-# When /should see matching \/([^\/]*)\/ (?:in the output|on the console)$/ do |partial_output|
+# When /output should match \/([^\/]*)\/$/ do |partial_output|
 #
-# When /should see matching:$/ do |partial_output|
+# When /output should match:$/ do |partial_output|
 #
-# When /^the exit status should be (\d+)$/ do |exit_status|
+# When /exit status should be (\d+)$/ do |exit_status|
 #
-# When /^the exit status should not be (\d+)$/ do |exit_status|
+# When /exit status should not be (\d+)$/ do |exit_status|
 #
-# When /^it should (pass|fail) with:$/ do |pass_fail, partial_output|
+# When /should (pass|fail) with:$/ do |pass_fail, partial_output|
 #
-# When /^the stderr should contain "([^\"]*)"$/ do |partial_output|
+# When /stderr should contain "([^\"]*)"$/ do |partial_output|
 #
-# When /^the stdout should contain "([^\"]*)"$/ do |partial_output|
+# When /stdout should contain "([^\"]*)"$/ do |partial_output|
 #
-# When /^the stderr should not contain "([^\"]*)"$/ do |partial_output|
+# When /stderr should not contain "([^\"]*)"$/ do |partial_output|
 #
-# When /^the stdout should not contain "([^\"]*)"$/ do |partial_output|
+# When /stdout should not contain "([^\"]*)"$/ do |partial_output|
 #
-# When /^the following files should exist:$/ do |files|
+# When /following files should exist:$/ do |files|
 #
-# When /^the following files should not exist:$/ do |files|
+# When /following files should not exist:$/ do |files|
 #
-# When /^the file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
+# When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
 #
-# When /^the file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
+# When /file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
 #
 
 When /am using rvm "([^\"]*)"$/ do |rvm_ruby_version|
@@ -153,46 +153,46 @@ When /run "(.*)" without errors?$/ do |cmd|
 end
 
 
-When /should see "([^\"]*)" (?:in the output|on the console)$/ do |partial_output|
+When /output should contain "([^"]*)"$/ do |partial_output|
   combined_output.should =~ compile_and_escape(partial_output)
 end
 
 
-When /should not see "([^\"]*)" (?:in the output|on the console)$/ do |partial_output|
+When /output should not contain "([^"]*)"$/ do |partial_output|
   combined_output.should_not =~ compile_and_escape(partial_output)
 end
 
 
-When /should see:$/ do |partial_output|
+When /output should contain:$/ do |partial_output|
   combined_output.should =~ compile_and_escape(partial_output)
 end
 
 
-When /should not see:$/ do |partial_output|
+When /output should not contain:$/ do |partial_output|
   combined_output.should_not =~ compile_and_escape(partial_output)
 end
 
 
-When /should see exactly "([^\"]*)" (?:in the output|on the console)$/ do |exact_output|
+When /output should contain exactly "([^"]*)"$/ do |exact_output|
   combined_output.should == unescape(exact_output)
 end
 
 
-When /should see exactly:$/ do |exact_output|
+When /output should contain exactly:$/ do |exact_output|
   combined_output.should == exact_output
 end
 
 
-# "I should see matching" allows regex in the partial_output, if
-# you don't need regex, use "I should see" instead since
+# "the output should match" allows regex in the partial_output, if
+# you don't need regex, use "the output should contain" instead since
 # that way, you don't have to escape regex characters that
 # appear naturally in the output
-When /should see matching \/([^\/]*)\/ (?:in the output|on the console)$/ do |partial_output|
+When /output should match \/([^\/]*)\/$/ do |partial_output|
   combined_output.should =~ /#{partial_output}/
 end
 
 
-When /should see matching:$/ do |partial_output|
+When /output should match:$/ do |partial_output|
   combined_output.should =~ /#{partial_output}/m
 end
 
@@ -208,7 +208,7 @@ end
 
 
 When /should (pass|fail) with:$/ do |pass_fail, partial_output|
-  When "I should see:", partial_output
+  When "output should contain:", partial_output
   if pass_fail == 'pass'
     @last_exit_status.should == 0
   else
