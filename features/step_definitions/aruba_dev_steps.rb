@@ -1,8 +1,4 @@
-Given /^I have a local file named "([^\"]*)" with:$/ do |filename, content|
-  File.open(filename, 'w') {|io| io.write(content)}
-end
-
-When /^I do aruba (.*)$/ do |aruba_step|
+When /^I do aruba (.*) step$/ do |aruba_step|
   begin
     When(aruba_step)
   rescue => e

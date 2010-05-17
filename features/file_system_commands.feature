@@ -58,7 +58,7 @@ Feature: file system commands
       """
       puts "hello world"
       """
-    When I do aruba I cd to "foo/nonexistant"
+    When I do aruba I cd to "foo/nonexistant" step
     Then aruba should fail with "tmp/aruba/foo/nonexistant is not a directory"
 
   Scenario: Check for presence of a subset of files

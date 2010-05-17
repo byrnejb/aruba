@@ -108,17 +108,17 @@ When /am using rvm gemset "([^\"]*)" with Gemfile:$/ do |rvm_gemset, gemfile|
 end
 
 
-When /^a directory named "([^\"]*)"$/ do |dir_name|
+When /directory named "([^\"]*)"$/ do |dir_name|
   create_dir(dir_name)
 end
 
 
-When /^a file named "([^\"]*)" with:$/ do |file_name, file_content|
+When /file named "([^\"]*)" with:$/ do |file_name, file_content|
   create_file(file_name, file_content)
 end
 
 
-When /^an empty file named "([^\"]*)"$/ do |file_name|
+When /empty file named "([^\"]*)"$/ do |file_name|
   create_file(file_name, "")
 end
 
@@ -143,8 +143,13 @@ When /run "(.*)"$/ do |cmd|
 end
 
 
-When /successfully run "(.*)"$/ do |cmd|
-  run(unescape(cmd))
+When /run "(.*)" with errors?$/ do |cmd|
+  run(unescape(cmd), false)
+end
+
+
+When /run "(.*)" without errors?$/ do |cmd|
+  run(unescape(cmd), true)
 end
 
 
@@ -192,17 +197,17 @@ When /should see matching:$/ do |partial_output|
 end
 
 
-When /^the exit status should be (\d+)$/ do |exit_status|
+When /exit status should be (\d+)$/ do |exit_status|
   @last_exit_status.should == exit_status.to_i
 end
 
 
-When /^the exit status should not be (\d+)$/ do |exit_status|
+When /exit status should not be (\d+)$/ do |exit_status|
   @last_exit_status.should_not == exit_status.to_i
 end
 
 
-When /^it should (pass|fail) with:$/ do |pass_fail, partial_output|
+When /should (pass|fail) with:$/ do |pass_fail, partial_output|
   When "I should see:", partial_output
   if pass_fail == 'pass'
     @last_exit_status.should == 0
@@ -212,41 +217,41 @@ When /^it should (pass|fail) with:$/ do |pass_fail, partial_output|
 end
 
 
-When /^the stderr should contain "([^\"]*)"$/ do |partial_output|
+When /stderr should contain "([^\"]*)"$/ do |partial_output|
   @last_stderr.should =~ compile_and_escape(partial_output)
 end
 
 
-When /^the stdout should contain "([^\"]*)"$/ do |partial_output|
+When /stdout should contain "([^\"]*)"$/ do |partial_output|
   @last_stdout.should =~ compile_and_escape(partial_output)
 end
 
 
-When /^the stderr should not contain "([^\"]*)"$/ do |partial_output|
+When /stderr should not contain "([^\"]*)"$/ do |partial_output|
   @last_stderr.should_not =~ compile_and_escape(partial_output)
 end
 
 
-When /^the stdout should not contain "([^\"]*)"$/ do |partial_output|
+When /stdout should not contain "([^\"]*)"$/ do |partial_output|
   @last_stdout.should_not =~ compile_and_escape(partial_output)
 end
 
 
-When /^the following files should exist:$/ do |files|
+When /following files should exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, true)
 end
 
 
-When /^the following files should not exist:$/ do |files|
+When /following files should not exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, false)
 end
 
 
-When /^the file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
+When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
   check_file_content(file, partial_content, true)
 end
 
 
-When /^the file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
+When /file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
   check_file_content(file, partial_content, false)
 end
