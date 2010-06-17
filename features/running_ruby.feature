@@ -11,15 +11,16 @@ Feature: Running ruby
     And the output should not contain "rvm usage"
 
   Scenario: Run with ruby JRuby
-    Given I am using rvm "jruby-1.4.0"
+    Given I am using rvm "jruby"
     When I run "ruby -e 'puts JRUBY_VERSION'"
-    Then the output should contain "1.4.0"
+    Then the output should contain "1.5.0"
     And the output should not contain "rvm usage"
 
   Scenario: Install gems with bundler
     Given I am using rvm "1.9.1"
     And I am using rvm gemset "a-new-gemset-where-no-gems-are-installed" with Gemfile:
       """
+      source :gemcutter
       gem 'diff-lcs', '1.1.2'
       """
     When I run "gem list"
@@ -28,12 +29,6 @@ Feature: Running ruby
       bundler \(\d+\.+\d+\.+\d+\)
       diff-lcs \(\d+\.+\d+\.+\d+\)
       """
-
-  Scenario: Specify both rvm and gemset
-    Given I am using rvm "1.9.1"
-    And I am using an empty rvm gemset "a-new-gemset-where-no-gems-are-installed"
-    When I run "gem list | wc -l"
-    Then the output should contain exactly "       2\n"
 
   Scenario: Find the version of ruby 1.9.1
     Given I am using rvm "1.9.1"
