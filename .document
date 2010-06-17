@@ -1,4 +1,6 @@
 README.rdoc
+lib/aruba/cucumber_steps.rb
+lib/aruba/api.rb
 lib/**/*.rb
 bin/*
 features/**/*.feature
