@@ -2,12 +2,19 @@ require 'aruba/api'
 
 World(Aruba::Api)
 
-=begin
-# Personally, I do not think that this is a very good idea.
-Before do
-  FileUtils.rm_rf(current_dir)
+Before do 
+  # This allows us to find the user's original working directory
+  @user_working_dir ||= FileUtils.pwd
 end
-=end
+
+Before('@aruba-tmpdir') do 
+  @dirs = ['tmp/aruba']
+  clean_up
+end
+
+Before('@no-aruba-tmpdir') do
+  @dirs = @user_working_dir
+end
 
 Before('@announce-cmd') do
   @announce_cmd = true
@@ -53,15 +60,15 @@ end
 #
 # When /successfully run "(.*)"$/ do |cmd|
 #
-# When /output should contain "([^"]*)"$/ do |partial_output|
+# When /output should contain "([^\"]*)"$/ do |partial_output|
 #
-# When /output should not contain "([^"]*)"$/ do |partial_output|
+# When /output should not contain "([^\"]*)"$/ do |partial_output|
 #
 # When /output should contain:$/ do |partial_output|
 #
 # When /output should not contain:$/ do |partial_output|
 #
-# When /output should contain exactly "([^"]*)"$/ do |exact_output|
+# When /output should contain exactly "([^\"]*)"$/ do |exact_output|
 #
 # When /output should contain exactly:$/ do |exact_output|
 #
@@ -153,12 +160,12 @@ When /run "(.*)" without errors?$/ do |cmd|
 end
 
 
-When /output should contain "([^"]*)"$/ do |partial_output|
+When /output should contain "([^\"]*)"$/ do |partial_output|
   combined_output.should =~ compile_and_escape(partial_output)
 end
 
 
-When /output should not contain "([^"]*)"$/ do |partial_output|
+When /output should not contain "([^\"]*)"$/ do |partial_output|
   combined_output.should_not =~ compile_and_escape(partial_output)
 end
 
@@ -173,7 +180,7 @@ When /output should not contain:$/ do |partial_output|
 end
 
 
-When /output should contain exactly "([^"]*)"$/ do |exact_output|
+When /output should contain exactly "([^\"]*)"$/ do |exact_output|
   combined_output.should == unescape(exact_output)
 end
 
@@ -217,6 +224,11 @@ When /should (pass|fail) with:$/ do |pass_fail, partial_output|
 end
 
 
+When /stderr should be empty$/ do
+  @last_stderr.should == ""
+end
+
+
 When /stderr should contain "([^\"]*)"$/ do |partial_output|
   @last_stderr.should =~ compile_and_escape(partial_output)
 end
@@ -237,6 +249,15 @@ When /stdout should not contain "([^\"]*)"$/ do |partial_output|
 end
 
 
+When /the clean_up api method should fail/ do
+  begin
+    clean_up
+    fail("clean_up api method did not raise error and should have")
+  rescue => @last_stderr
+  end
+end
+
+
 When /following files should exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, true)
 end
@@ -245,6 +266,20 @@ end
 When /following files should not exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, false)
 end
+
+
+When /^the following directories should exist:$/ do |directories|
+  check_directory_presence(directories.raw.map{
+    |directory_row| directory_row[0]}, true)
+end
+
+
+When /^the following directories should not exist:$/ do |directories|
+  check_file_presence(directories.raw.map{
+    |directory_row| directory_row[0]}, false)
+end
+
+
 
 
 When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|

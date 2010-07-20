@@ -1,12 +1,10 @@
+@aruba-tmpdir
 Feature: file system commands
 
   In order to specify commands that load files
   As a developer using Cucumber
   I want to create temporary files
-
-  Background:
-    Then clean up the working directory
-  
+ 
   Scenario: create a dir
     Given a directory named "foo/bar"
     When I run "ruby -e \"puts test ?d, 'foo'\""
@@ -85,3 +83,22 @@ Feature: file system commands
       """
     Then the file "foo" should contain "hello world"
     And the file "foo" should not contain "HELLO WORLD"
+
+  Scenario: @aruba-tmpdir flag runs scenario in tmp/aruba
+    When I run "ruby -e \"require 'fileutils'; puts FileUtils.pwd\""
+    Then the stdout should contain "tmp/aruba"
+
+  @no-aruba-tmpdir
+  Scenario: @no-aruba-tmpdir runs scenario in cwd
+    When I run "ruby -e \"require 'fileutils'; puts FileUtils.pwd\""
+    Then the stdout should not contain "tmp/aruba"
+
+  @aruba-tmpdir @announce
+  Scenario: clean_up api checks for tmp directory subtree
+    Given a file named "../../testdata/delete_me.rb" with:
+    """
+    puts "I should not be here!"
+    """
+      And I cd to "../../testdata"
+    Then the clean_up api method should fail
+      And output should match /outside the tmp subtree and may not be deleted/

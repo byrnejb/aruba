@@ -17,12 +17,22 @@ module Api
     raise "#{current_dir} is not a directory." unless File.directory?(current_dir)
   end
 
-  def clean_up(dir = current_dir)
+  def clean_up!(dir = current_dir)
     FileUtils.rm_rf(dir)
   end
 
+  def clean_up(dir = current_dir)
+    check_dir = File.expand_path(dir)
+    if File.fnmatch('**/tmp/**',check_dir)
+      FileUtils.rm_rf(dir)
+    else
+      raise "#{check_dir} is outside the tmp subtree and may not be deleted."
+    end
+  end
+
   def dirs
-    @dirs ||= ['tmp/aruba']
+    #@dirs ||= ['tmp/aruba']
+    @dirs ||= ['./']
   end
 
   def create_file(file_name, file_content)
@@ -93,7 +103,8 @@ module Api
   end
 
   def combined_output
-    @last_stdout + (@last_stderr == '' ? '' : "\n#{'-'*70}\n#{@last_stderr}")
+    @last_stdout.to_s + (@last_stderr.to_s == '' ? \
+      '' : "\n#{'-'*70}\n#{@last_stderr}")
   end
 
   def use_rvm(rvm_ruby_version)

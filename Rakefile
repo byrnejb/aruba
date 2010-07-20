@@ -5,13 +5,14 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.version = "0.2.1.jbb"
+    gem.version = "0.2.2.jbb"
     gem.name = "aruba"
     gem.summary = %Q{CLI Steps for Cucumber}
     gem.description = %Q{CLI Steps for Cucumber, hand-crafted for you in Aruba}
     gem.email = "cukes@googlegroups.com"
     gem.homepage = "http://github.com/aslakhellesoy/aruba"
     gem.authors = ["Aslak Hellesøy", "David Chelimsky"]
+    gem.add_development_dependency "rcov", ">= 0.9.0"
     gem.add_development_dependency "rspec", ">= 2.0.0.beta.17"
     gem.add_development_dependency "cucumber", ">= 0.8.4"
   end
@@ -25,7 +26,7 @@ begin
 
   Cucumber::Rake::Task.new do |t|
     t.cucumber_opts = %w{--tags ~@jruby} unless defined?(JRUBY_VERSION)
-    t.rcov = true
+    t.rcov = false
   end
 
   task :cucumber => :check_dependencies
