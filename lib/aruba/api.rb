@@ -24,7 +24,7 @@ module Api
   def clean_up(dir = current_dir)
     check_dir = File.expand_path(dir)
     if File.fnmatch('**/tmp/**',check_dir)
-      FileUtils.rm_rf(dir)
+      FileUtils.rm_rf(check_dir)
     else
       raise "#{check_dir} is outside the tmp subtree and may not be deleted."
     end

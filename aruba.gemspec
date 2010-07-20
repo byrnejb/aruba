@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{aruba}
-  s.version = "0.2.2.jbb"
+  s.version = "0.2.3.jbb"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aslak Helles\303\270y", "David Chelimsky"]
@@ -46,18 +46,15 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rcov>, [">= 0.9.0"])
-      s.add_development_dependency(%q<rspec>, [">= 2.0.0.beta.17"])
-      s.add_development_dependency(%q<cucumber>, [">= 0.8.4"])
+      s.add_development_dependency(%q<rspec>, [">= 1.3.0"])
+      s.add_development_dependency(%q<cucumber>, [">= 0.8.3"])
     else
-      s.add_dependency(%q<rcov>, [">= 0.9.0"])
-      s.add_dependency(%q<rspec>, [">= 2.0.0.beta.17"])
-      s.add_dependency(%q<cucumber>, [">= 0.8.4"])
+      s.add_dependency(%q<rspec>, [">= 1.3.0"])
+      s.add_dependency(%q<cucumber>, [">= 0.8.3"])
     end
   else
-    s.add_dependency(%q<rcov>, [">= 0.9.0"])
-    s.add_dependency(%q<rspec>, [">= 2.0.0.beta.17"])
-    s.add_dependency(%q<cucumber>, [">= 0.8.4"])
+    s.add_dependency(%q<rspec>, [">= 1.3.0"])
+    s.add_dependency(%q<cucumber>, [">= 0.8.3"])
   end
 end
 
