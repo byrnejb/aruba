@@ -34,71 +34,6 @@ Before('@announce') do
   @announce_cmd = true
 end
 
-#
-# :section: cucumber_steps matchers
-#
-#
-# When /am using rvm "([^\"]*)"$/ do |rvm_ruby_version|
-#
-# When /am using( an empty)? rvm gemset "([^\"]*)"$/ do |empty_gemset, rvm_gemset|
-#
-# When /am using rvm gemset "([^\"]*)" with Gemfile:$/ do |rvm_gemset, gemfile|#
-#
-# When /directory named "([^\"]*)"$/ do |dir_name|
-#
-# When /file named "([^\"]*)" with:$/ do |file_name, file_content|
-#
-# When /empty file named "([^\"]*)"$/ do |file_name|
-#
-# When /append to "([^\"]*)" with:$/ do |file_name, file_content|
-#
-# When /^I cd to "([^\"]*)"$/ do |dir|
-#
-# When /clean up the working directory/ do
-#
-# When /run "(.*)"$/ do |cmd|
-#
-# When /successfully run "(.*)"$/ do |cmd|
-#
-# When /output should contain "([^\"]*)"$/ do |partial_output|
-#
-# When /output should not contain "([^\"]*)"$/ do |partial_output|
-#
-# When /output should contain:$/ do |partial_output|
-#
-# When /output should not contain:$/ do |partial_output|
-#
-# When /output should contain exactly "([^\"]*)"$/ do |exact_output|
-#
-# When /output should contain exactly:$/ do |exact_output|
-#
-# When /output should match \/([^\/]*)\/$/ do |partial_output|
-#
-# When /output should match:$/ do |partial_output|
-#
-# When /exit status should be (\d+)$/ do |exit_status|
-#
-# When /exit status should not be (\d+)$/ do |exit_status|
-#
-# When /should (pass|fail) with:$/ do |pass_fail, partial_output|
-#
-# When /stderr should contain "([^\"]*)"$/ do |partial_output|
-#
-# When /stdout should contain "([^\"]*)"$/ do |partial_output|
-#
-# When /stderr should not contain "([^\"]*)"$/ do |partial_output|
-#
-# When /stdout should not contain "([^\"]*)"$/ do |partial_output|
-#
-# When /following files should exist:$/ do |files|
-#
-# When /following files should not exist:$/ do |files|
-#
-# When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
-#
-# When /file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
-#
-
 When /am using rvm "([^\"]*)"$/ do |rvm_ruby_version|
   use_rvm(rvm_ruby_version)
 end
@@ -249,37 +184,26 @@ When /stdout should not contain "([^\"]*)"$/ do |partial_output|
 end
 
 
-When /the clean_up api method should fail/ do
-  begin
-    clean_up
-    fail("clean_up api method did not raise error and should have")
-  rescue => @last_stderr
-  end
-end
-
-
-When /following files should exist:$/ do |files|
+When /following files? should exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, true)
 end
 
 
-When /following files should not exist:$/ do |files|
+When /following files? should not exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, false)
 end
 
 
-When /^the following directories should exist:$/ do |directories|
+When /^the following directories? should exist:$/ do |directories|
   check_directory_presence(directories.raw.map{
     |directory_row| directory_row[0]}, true)
 end
 
 
-When /^the following directories should not exist:$/ do |directories|
+When /^the following directories? should not exist:$/ do |directories|
   check_file_presence(directories.raw.map{
     |directory_row| directory_row[0]}, false)
 end
-
-
 
 
 When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
