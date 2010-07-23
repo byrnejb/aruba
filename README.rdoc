@@ -9,7 +9,7 @@ C program, a Java program, a Perl script - anything.
 Aruba may also be used to test complex configuration files for third-party
 applications where the software itself may not be modified.
 
-Aruba provides also support for testing using various Ruby versions (see below).
+Aruba provides support for testing using various Ruby versions (see below).
 
 == Usage
 
@@ -18,7 +18,7 @@ Aruba provides also support for testing using various Ruby versions (see below).
 Then, just require the library in one of your Ruby files under 
 <tt>features/support</tt>
 
-  require 'aruba-jbb'
+  require 'aruba'  # note that aruba-jbb and aruba cannot co-exist
 
 You now have a bunch of step definitions that you can use in your features. 
 Look at aruba/cucumber_steps.rb to see all the step definitions. Look at 
@@ -38,8 +38,8 @@ This fork also contains a <tt>rebase</tt> api method which creates soft
 (symbolic) links inside aruba's working directory to directories rooted
 at the user's own current working directory (cwd). This permits the
 application to find its configuation and support files in their usual
-directories.  A string of directories to rebase may be passed by setting
-the ARUBA_REBASE environmental variable.  These must be set relative
+directories.  A string of directories to rebase also may be passed by
+setting the ARUBA_REBASE environmental variable.  These must be set relative
 to the user's cwd as well.
 
 For example:
@@ -56,7 +56,7 @@ instead of the awd.  When this tag is activated the directory contents are not
 cleared, for obvious reasons. In fact, if the awd is set to anything outside
 a directory tree containing a <tt>/tmp/</tt> portion then an error is raised
 when trying to clear the contents.  For similar reasons, when this is the case
-the <tt>rebase</tt> method also is deactivated.
+the <tt>rebase</tt> method also raises an error.
 
 == Ruby/RVM love
 
@@ -105,16 +105,15 @@ tags on individual scenarios, or on a feature. The tags are:
   version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-
 == Note on Aruba-JBB Step Definitions
 
 This fork has extensively refactoried both the API and the Step
 Definitions.  There is some breakage with the step definitions 
 provided with the parent.  Mostly these have to do with making
-Aruba steps more specifis so as to avoid anticipate collisions
-with the user's own steps.  On the other hand, most Aruba steps
-are now defined as sub strings so that the subject is no longer
-part of the matcher.  For example, instead of:
+Aruba-jbb steps more specific so as to avoid anticipated collisions
+with the user's own steps.  On the other hand, most Aruba-jbb steps
+are defined as sub strings so that the subject is no longer part of
+the matcher.  For example, instead of:
 
 <tt>When /^I have a file named "([^\"]*)"$/ do |file|</tt>
 
@@ -139,8 +138,7 @@ RSpec.
 There is a problem with loading Ruby libraries from rake which causes
 Gherkin not to be found by Cucumber when Aruba features are exercised
 using Rake (<tt>rake</tt> or <tt>rake cucumber</tt>).  Nonetheless, all 
-exercised features not using JRuby pass when exercised using 
-<tt>cucumber features</tt>.  
+features not using JRuby pass when exercised using <tt>cucumber features</tt>.  
 
 You can contact me at byrnejb@jharte-lyne.ca.  I also monitor the 
 cukes@googlegroups.com mailing list.
@@ -150,7 +148,7 @@ cukes@googlegroups.com mailing list.
 I have renamed this gem since it has now evolved considerably away
 from the baseline although, in the main, compatiblity between the
 the two remains quite high. Nonetheless, to avoid collisions Aruba
-must be removed (or uninstalled) if you wish to use Aruba-JBB.  
+must be removed (or uninstalled) if you wish to use Aruba-jbb.  
 
 However, Cucumber-Rails v0.3.2 has a dependency on Aruba which will
 result in the Aruba baseline gem being installed whenever 
