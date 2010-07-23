@@ -59,11 +59,11 @@ Feature: Running ruby
   # In order to make this scenario pass you therefore need to install
   # ruby-1.8.7-tv1_8_7_174 with rvm.
   Scenario: Specify an alias for an rvm
-    Given I have a local file named "config/aruba-rvm.yml" with:
+    Given I do have a file named "config/aruba-rvm.yml" with:
       """
       1.8.7: ruby-1.8.7-tv1_8_7_174
       """
-    And I am using rvm "1.8.7"
+      And I am using rvm "1.8.7"
     When I run "ruby --version"
     Then the output should contain "patchlevel 174"
 

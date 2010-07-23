@@ -4,12 +4,12 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{aruba}
-  s.version = "0.2.3.jbb"
+  s.name = %q{aruba-jbb}
+  s.version = "0.2.1"
 
-  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Aslak Helles\303\270y", "David Chelimsky"]
-  s.date = %q{2010-07-21}
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.authors = ["Aslak Helles\303\270y", "David Chelimsky", "James B. Byrne"]
+  s.date = %q{2010-07-23}
   s.description = %q{CLI Steps for Cucumber, hand-crafted for you in Aruba}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [
@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
      "lib/aruba/api.rb",
      "lib/aruba/cucumber_steps.rb"
   ]
-  s.homepage = %q{http://github.com/aslakhellesoy/aruba}
+  s.homepage = %q{http://github.com/byrnejb/aruba}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.6}

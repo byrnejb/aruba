@@ -1,4 +1,3 @@
-@aruba-tmpdir
 Feature: file system commands
 
   In order to specify commands that load files
@@ -6,12 +5,12 @@ Feature: file system commands
   I want to create temporary files
  
   Scenario: create a dir
-    Given a directory named "foo/bar"
+    Given I do have a directory named "foo/bar"
     When I run "ruby -e \"puts test ?d, 'foo'\""
     Then the stdout should contain "true"
   
   Scenario: create a file
-    Given a file named "foo/bar/example.rb" with:
+    Given I do have a file named "foo/bar/example.rb" with:
       """
       puts "hello world"
       """
@@ -19,7 +18,7 @@ Feature: file system commands
     Then the output should contain "hello world"
 
   Scenario: append to a file
-    Given a file named "foo/bar/example.rb" with:
+    Given I do have a file named "foo/bar/example.rb" with:
       """
       puts "hello world"
       """
@@ -29,20 +28,20 @@ Feature: file system commands
       """
     When I run "ruby foo/bar/example.rb"
     Then the output should contain "hello world"
-    And the output should contain "this was appended"
+      And the output should contain "this was appended"
 
   Scenario: clean up files generated in previous scenario
     When I run "ruby foo/bar/example.rb"
     Then the exit status should be 1
-    And the output should contain "No such file or directory -- foo/bar/example.rb"
+      And the output should contain "No such file or directory -- foo/bar/example.rb"
 
   Scenario: change to a subdir
-    Given a file named "foo/bar/example.rb" with:
+    Given I do have a file named "foo/bar/example.rb" with:
       """
       puts "hello world"
       """
     When I cd to "foo/bar"
-    And I run "ruby example.rb"
+      And I run "ruby example.rb"
     Then the output should contain "hello world"
 
   Scenario: Reset current directory from previous scenario
@@ -50,7 +49,7 @@ Feature: file system commands
     Then the exit status should be 1
 
   Scenario: Holler if cd to bad dir
-    Given a file named "foo/bar/example.rb" with:
+    Given I do have a file named "foo/bar/example.rb" with:
       """
       puts "hello world"
       """
@@ -58,9 +57,9 @@ Feature: file system commands
     Then aruba should fail with "tmp/aruba/foo/nonexistant is not a directory"
 
   Scenario: Check for presence of a subset of files
-    Given an empty file named "lorem/ipsum/dolor"
-    Given an empty file named "lorem/ipsum/sit"
-    Given an empty file named "lorem/ipsum/amet"
+    Given I do have an empty file named "lorem/ipsum/dolor"
+      And I do have an empty file named "lorem/ipsum/sit"
+      And I do have an empty file named "lorem/ipsum/amet"
     Then the following files should exist:
       | lorem/ipsum/dolor |
       | lorem/ipsum/amet  |
@@ -70,19 +69,19 @@ Feature: file system commands
       | lorem/ipsum/dolor |
       
   Scenario: Check for presence of a subset of directories
-    Given a directory named "foo/bar"
-    Given a directory named "foo/bla"
+    Given I do have a directory named "foo/bar"
+      And I do have a directory named "foo/bla"
     Then the following directories should exist:
       | foo/bar |
       | foo/bla |
 
   Scenario: Check file contents
-    Given a file named "foo" with:
+    Given I do have a file named "foo" with:
       """
       hello world
       """
     Then the file "foo" should contain "hello world"
-    And the file "foo" should not contain "HELLO WORLD"
+      And the file "foo" should not contain "HELLO WORLD"
 
   Scenario: @aruba-tmpdir flag runs scenario in tmp/aruba
     When I run "ruby -e \"require 'fileutils'; puts FileUtils.pwd\""
@@ -93,12 +92,24 @@ Feature: file system commands
     When I run "ruby -e \"require 'fileutils'; puts FileUtils.pwd\""
     Then the stdout should not contain "tmp/aruba"
 
-  @aruba-tmpdir @announce
+  @rebase-test @aruba-tmpdir @announce 
   Scenario: clean_up api checks for tmp directory subtree
-    Given a file named "../../testdata/delete_me.rb" with:
-    """
-    puts "I should not be here!"
-    """
-      And I cd to "../../testdata"
+    Given the rebase-test before block conditions
+    When I cd to "../../testdata"
     Then the clean_up api method should fail
       And output should match /outside the tmp subtree and may not be deleted/
+
+
+  @rebase-test @aruba-tmpdir @announce
+  Scenario: @rebase-test tag creates soft links in aruba working directory
+    Given the rebase-test before block conditions
+    Then the soft links should exist in the aruba working directory
+
+
+  @rebase-test @aruba-tmpdir @announce
+  Scenario: rebase api creats soft links in aruba working directory
+    Given the rebase-test before block conditions
+      And I create the cwd sub-directory named "rebase_test"
+    When I rebase the directory named "rebase_test"
+    Then "rebase_test" should have a soft link in the aruba working directory
+      And I delete the cwd sub-directory named "rebase_test"
