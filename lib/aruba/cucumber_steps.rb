@@ -14,7 +14,6 @@ end
 
 
 Before('@no-aruba-tmpdir') do
-  puts aruba_working_dir
   aruba_working_dir_set('./')
   dirs_init
 end
