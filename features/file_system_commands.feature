@@ -74,6 +74,11 @@ Feature: file system commands
     Then the following directories should exist:
       | foo/bar |
       | foo/bla |
+      
+  Scenario: Check for absence of a subset of directories
+    Then the following directories should not exist:
+      | foo/bar |
+      | foo/bla |
 
   Scenario: Check file contents
     Given I do have a file named "foo" with:

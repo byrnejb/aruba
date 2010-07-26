@@ -219,7 +219,7 @@ end
 
 
 When /following directories? should not exist:$/ do |directories|
-  check_file_presence(directories.raw.map{
+  check_directory_presence(directories.raw.map{
     |directory_row| directory_row[0]}, false)
 end
 
