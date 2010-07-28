@@ -228,6 +228,16 @@ When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
 end
 
 
+When /file "([^\"]*)" should contain:$/ do |file, partial_content|
+  check_file_content(file, partial_content, true)
+end
+
+
 When /file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
+  check_file_content(file, partial_content, false)
+end
+
+
+When /file "([^\"]*)" should not contain:$/ do |file, partial_content|
   check_file_content(file, partial_content, false)
 end

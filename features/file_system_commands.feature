@@ -61,32 +61,56 @@ Feature: file system commands
       And I do have an empty file named "lorem/ipsum/sit"
       And I do have an empty file named "lorem/ipsum/amet"
     Then the following files should exist:
-      | lorem/ipsum/dolor |
-      | lorem/ipsum/amet  |
+        | lorem/ipsum/dolor |
+        | lorem/ipsum/amet  |
 
   Scenario: Check for absence of files
     Then the following files should not exist:
-      | lorem/ipsum/dolor |
+        | lorem/ipsum/dolor |
       
   Scenario: Check for presence of a subset of directories
     Given I do have a directory named "foo/bar"
       And I do have a directory named "foo/bla"
     Then the following directories should exist:
-      | foo/bar |
-      | foo/bla |
+        | foo/bar |
+        | foo/bla |
       
-  Scenario: Check for absence of a subset of directories
-    Then the following directories should not exist:
-      | foo/bar |
-      | foo/bla |
+  Scenario: Cross-check for absence and presence of directories and files
+    Given I do have a directory named "bar/foo"
+      And I do have an empty file named "sna/fu"
+  
+    Then  the following directories should exist:
+        | bar/foo |
+      And the following files should exist:
+        | sna/fu  |
 
+      But the following directories should not exist:
+        | foo/bar |
+        | foo/bla |
+        | sna/fu  |
+
+      And the following files should not exist:
+        | bar/foo |
+        | bar/ten |
+        | foo/one |  
+  
   Scenario: Check file contents
     Given I do have a file named "foo" with:
       """
       hello world
+      Hi there
       """
     Then the file "foo" should contain "hello world"
-      And the file "foo" should not contain "HELLO WORLD"
+      And the file "foo" should contain:
+      """
+      hello world
+      Hi there
+      """
+    Then the file "foo" should not contain "HELLO WORLD"
+    And the file "foo" should not contain:
+      """
+      HELLO WORLD
+      """
 
   Scenario: @aruba-tmpdir flag runs scenario in tmp/aruba
     When I run "ruby -e \"require 'fileutils'; puts FileUtils.pwd\""
