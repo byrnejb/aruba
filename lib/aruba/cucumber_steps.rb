@@ -56,12 +56,13 @@ When /clean up the working directory/ do
 end
 
 
-When /do have a directory named "([^\"]*)"$/ do |dir_name|
+When /do have (?:a|the) directory named "([^\"]*)"$/ do |dir_name|
   create_dir(dir_name)
 end
 
 
-When /do have a file named "([^\"]*)" with:$/ do |file_name, file_content|
+When /do have (?:a|the) file named "([^\"]*)" (?:containing|with):$/ \
+  do |file_name, file_content|
   create_file(file_name, file_content)
 end
 

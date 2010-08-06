@@ -22,10 +22,6 @@ module Aruba
     @aruba_working_dir
   end
 
-  def x_ray(dir)
-    fail("In x_ray")
-  end
-
   # This allows before hooks to set aruba's working directory
   # relative to user's cwd
   def aruba_working_dir_set(dir)
@@ -39,10 +35,10 @@ module Aruba
 
   def aruba_working_dir_init
 
+    @aruba_working_dir = [ARUBA_WORKING_DIR_DEFAULT]
+
     if defined?(ENV[ARUBA_WORKING_DIR])
-      @aruba_working_dir = [ENV[ARUBA_WORKING_DIR]]
-    else
-      @aruba_working_dir ||= ['tmp/aruba']
+      @aruba_working_dir = [ENV[ARUBA_WORKING_DIR]] 
     end
 
     dirs_init
