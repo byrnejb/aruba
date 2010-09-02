@@ -201,18 +201,6 @@ module Aruba
     FileUtils.mkdir_p(dir_name) unless File.directory?(dir_name)
   end
 
-  def unescape(string)
-    eval(%{"#{string}"})
-  end
-
-  def use_rvm(rvm_ruby_version)
-    if File.exist?('config/aruba-rvm.yml')
-      @rvm_ruby_version = YAML.load_file('config/aruba-rvm.yml')[rvm_ruby_version] || rvm_ruby_version
-    else
-      @rvm_ruby_version = rvm_ruby_version
-    end
-  end
-
   def rebase(dirs=nil)
 
     rebase_dirs_add(dirs) if dirs
@@ -237,7 +225,8 @@ module Aruba
 
   def rebase_dirs_add(dirs=nil)
     return unless dirs
-    dirs = dirs.to_a.flatten
+    dirs = dirs.lines.to_a if dirs.respond_to?('lines')
+    dirs = dirs.flatten
     @aruba_rebase_dirs ||= []
     @aruba_rebase_dirs = (@aruba_rebase_dirs + dirs).uniq
   end
@@ -273,6 +262,18 @@ module Aruba
     end
 
     @last_stderr
+  end
+
+  def unescape(string)
+    eval(%{"#{string}"})
+  end
+
+  def use_rvm(rvm_ruby_version)
+    if File.exist?('config/aruba-rvm.yml')
+      @rvm_ruby_version = YAML.load_file('config/aruba-rvm.yml')[rvm_ruby_version] || rvm_ruby_version
+    else
+      @rvm_ruby_version = rvm_ruby_version
+    end
   end
 
   def use_rvm_gemset(rvm_gemset, empty_gemset)
