@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{aruba-jbb}
-  s.version = "0.2.5"
+  s.version = "0.2.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Aslak Helles\303\270y", "David Chelimsky", "James B. Byrne"]
-  s.date = %q{2010-08-06}
+  s.authors = ["Aslak Hellesøy", "David Chelimsky", "James B. Byrne"]
+  s.date = %q{2010-09-02}
   s.description = %q{CLI Steps for Cucumber, hand-crafted for you in Aruba}
   s.email = %q{cukes@googlegroups.com}
   s.extra_rdoc_files = [

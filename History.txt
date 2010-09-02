@@ -1,7 +1,28 @@
+== 0.2.6
+* Altered rebase method to handle Ruby 1.9 changes to String class. (JBB)
+
+== 0.2.5
+* Fixed initialization error in aruba_working)dir_init. (JBB)
+* Extended cucumber_step matchers for file creation and contents. (JBB)
+
+== 0.2.4
+* Added file should/should not contain:$ step matchers. (JBB)
+* Expanded directory and file detection self-test cross-check. (JBB)
+
+== 0.2.3
+* Fixed no directories step error and added scenario to test this
+
+== 0.2.2
+* Extensive refactoring of steps and api. (JBB)
+* Added rebase method to api and associated tags (JBB)
+* Forked from Aruba 0.2.1 and renamed to aruba-jbb (JBB)
+* Removed unnecessary dependencies on cucumber and rspec beta versions. (JBB)
+
 == 0.2.1
 
 === Bugfixes
-* Always compare with RSpec should =~ instead of should match. This gives a diff when there is no match. (Aslak Hellesøy)
+* Always compare with RSpec should =~ instead of should match. 
+  This gives a diff when there is no match. (Aslak Hellesøy)
 
 == 0.2.0
 
@@ -36,7 +57,8 @@
   + /^the output should match:$/
 
 == 0.1.9
-* If the GOTGEMS environment variable is set, bundler won't run (faster). (Aslak Hellesøy)
+* If the GOTGEMS environment variable is set, bundler won't run (faster). 
+  (Aslak Hellesøy)
 
 == 0.1.8
 * Use // instead of "" for "I should see matching" step. (Aslak Hellesøy)
