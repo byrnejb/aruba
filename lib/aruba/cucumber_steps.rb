@@ -211,14 +211,13 @@ When /following files? should not exist:$/ do |files|
   check_file_presence(files.raw.map{|file_row| file_row[0]}, false)
 end
 
-
-When /following directories? should exist:$/ do |directories|
+When /following directories should exist:$/ do |directories|
   check_directory_presence(directories.raw.map{
     |directory_row| directory_row[0]}, true)
 end
 
 
-When /following directories? should not exist:$/ do |directories|
+When /following directories should not exist:$/ do |directories|
   check_directory_presence(directories.raw.map{
     |directory_row| directory_row[0]}, false)
 end
