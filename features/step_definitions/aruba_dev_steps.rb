@@ -6,14 +6,10 @@ When /^I do aruba (.*) step$/ do |aruba_step|
   end
 end
 
-Then /^the output should contain the JRuby version$/ do
-  Then %{the output should contain "#{JRUBY_VERSION}"}
+Then /^aruba should fail with "([^\"]*)"$/ do |error_message|
+  @aruba_exception.message.should =~ regexp(error_message)
 end
 
-Then /^the output should contain the current Ruby version$/ do
-  Then %{the output should contain "#{RUBY_VERSION}"}
-end
-
-Then /^aruba should fail with "([^"]*)"$/ do |error_message|
-  @aruba_exception.message.should =~ compile_and_escape(error_message)
+Then /^the following step should fail with Spec::Expectations::ExpectationNotMetError:$/ do |multiline_step|
+  proc {steps multiline_step}.should raise_error(RSpec::Expectations::ExpectationNotMetError)
 end
