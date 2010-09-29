@@ -1,1 +1,1 @@
-require 'aruba/cucumber_steps'
+require 'aruba/cucumber'
