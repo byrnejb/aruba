@@ -11,6 +11,7 @@ applications where the software itself may not be modified.
 
 Aruba provides support for testing using various Ruby versions (see below).
 
+
 == Usage
 
   gem install aruba-jbb
@@ -89,10 +90,12 @@ Aruba has several tags you can use to see what command actually gets run
 (useful if you're using the RVM steps), STDOUT or STDERR. You can put these 
 tags on individual scenarios, or on a feature. The tags are:
 
-* <tt>@announce-cmd</tt>
-* <tt>@announce-stdout</tt>
-* <tt>@announce-stderr</tt>
-* <tt>@announce</tt> (does all of the above)
+* <tt>@announce-cmd</tt> - See what command is is run
+* <tt>@announce-stdout</tt> - See the stdout
+* <tt>@announce-stderr</tt> - See the stderr
+* <tt>@announce-dir</tt> - See the current directory
+* <tt>@announce-env</tt> - See environment variables set by Aruba
+* <tt>@announce</tt> - Does all of the above
 
 == Note on Patches/Pull Requests
  

@@ -68,7 +68,12 @@ When /^the output should contain the current Ruby version$/ do
   Then %{the output should contain "#{RUBY_VERSION}"}
 end
 
-
+  
 When /^aruba should fail with "([^\"]*)"$/ do |error_message|
-  @aruba_exception.message.should =~ compile_and_escape(error_message)
+  @aruba_exception.message.should =~ regexp(error_message)
+end
+
+
+When /^the following step should fail with Spec::Expectations::ExpectationNotMetError:$/ do |multiline_step|
+  proc {steps multiline_step}.should raise_error(RSpec::Expectations::ExpectationNotMetError)
 end

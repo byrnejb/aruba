@@ -72,8 +72,8 @@ Feature: file system commands
     Given I do have a directory named "foo/bar"
       And I do have a directory named "foo/bla"
     Then the following directories should exist:
-        | foo/bar |
-        | foo/bla |
+      | foo/bar |
+      | foo/bla |
       
   Scenario: Cross-check for absence and presence of directories and files
     Given I do have a directory named "bar/foo"
@@ -92,7 +92,17 @@ Feature: file system commands
       And the following files should not exist:
         | bar/foo |
         | bar/ten |
-        | foo/one |  
+        | foo/one | 
+  
+  Scenario: check for absence of directories
+    Given I do have a directory named "foo/bar"
+      And i do have a directory named "foo/bla"
+    Then the following step should fail with Spec::Expectations::ExpectationNotMetError:
+    """
+    Then the following directories should not exist:
+      | foo/bar/ |
+      | foo/bla/ |
+    """
   
   Scenario: Check file contents
     Given I do have a file named "foo" with:
@@ -107,7 +117,7 @@ Feature: file system commands
       Hi there
       """
     Then the file "foo" should not contain "HELLO WORLD"
-    And the file "foo" should not contain:
+      And the file "foo" should not contain:
       """
       HELLO WORLD
       """
@@ -128,12 +138,10 @@ Feature: file system commands
     Then the clean_up api method should fail
       And output should match /outside the tmp subtree and may not be deleted/
 
-
   @rebase-test @aruba-tmpdir @announce
   Scenario: @rebase-test tag creates soft links in aruba working directory
     Given the rebase-test before block conditions
     Then the soft links should exist in the aruba working directory
-
 
   @rebase-test @aruba-tmpdir @announce
   Scenario: rebase api creats soft links in aruba working directory
@@ -142,3 +150,14 @@ Feature: file system commands
     When I rebase the directory named "rebase_test"
     Then "rebase_test" should have a soft link in the aruba working directory
       And I delete the cwd sub-directory named "rebase_test"
+
+
+  Scenario: Check file contents with regex
+    Given we do have a file named "foo" with:
+      """
+      hello world
+      """
+    Then the file "foo" should match /hel.o world/
+    And the file "foo" should not match /HELLO WORLD/
+
+
