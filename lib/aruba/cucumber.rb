@@ -55,35 +55,35 @@ After do
   restore_env
 end
 
-Given /^I'm using a clean gemset "([^"]*)"$/ do |gemset|
+Given /^using a clean gemset "([^\"]*)"$/ do |gemset|
   use_clean_gemset(gemset)
 end
 
-Given /^a directory named "([^"]*)"$/ do |dir_name|
+Given /^a directory named "([^\"]*)"$/ do |dir_name|
   create_dir(dir_name)
 end
 
-Given /^a file named "([^"]*)" with:$/ do |file_name, file_content|
+Given /^a file named "([^\"]*)" with:$/ do |file_name, file_content|
   create_file(file_name, file_content)
 end
 
-Given /^an empty file named "([^"]*)"$/ do |file_name|
+Given /^an empty file named "([^\"]*)"$/ do |file_name|
   create_file(file_name, "")
 end
 
-When /^I write to "([^"]*)" with:$/ do |file_name, file_content|
+When /^I write to "([^\"]*)" with:$/ do |file_name, file_content|
   create_file(file_name, file_content, false)
 end
 
-When /^I overwrite "([^"]*)" with:$/ do |file_name, file_content|
+When /^I overwrite "([^\"]*)" with:$/ do |file_name, file_content|
   create_file(file_name, file_content, true)
 end
 
-When /^I append to "([^"]*)" with:$/ do |file_name, file_content|
+When /^I append to "([^\"]*)" with:$/ do |file_name, file_content|
   append_to_file(file_name, file_content)
 end
 
-When /^I cd to "([^"]*)"$/ do |dir|
+When /^I cd to "([^\"]*)"$/ do |dir|
   cd(dir)
 end
 
@@ -95,19 +95,19 @@ When /^I successfully run "(.*)"$/ do |cmd|
   run(unescape(cmd))
 end
 
-When /^I run "([^"]*)" interactively$/ do |cmd|
+When /^I run "([^\"]*)" interactively$/ do |cmd|
   run_interactive(unescape(cmd))
 end
 
-When /^I type "([^"]*)"$/ do |input|
+When /^I type "([^\"]*)"$/ do |input|
   write_interactive(ensure_newline(input))
 end
 
-Then /^the output should contain "([^"]*)"$/ do |partial_output|
+Then /^the output should contain "([^\"]*)"$/ do |partial_output|
   assert_partial_output(partial_output)
 end
 
-Then /^the output should not contain "([^"]*)"$/ do |partial_output|
+Then /^the output should not contain "([^\"]*)"$/ do |partial_output|
   combined_output.should_not =~ regexp(partial_output)
 end
 
@@ -119,7 +119,7 @@ Then /^the output should not contain:$/ do |partial_output|
   combined_output.should_not =~ regexp(partial_output)
 end
 
-Then /^the output should contain exactly "([^"]*)"$/ do |exact_output|
+Then /^the output should contain exactly "([^\"]*)"$/ do |exact_output|
   combined_output.should == unescape(exact_output)
 end
 
@@ -160,19 +160,19 @@ Then /^it should (pass|fail) with regexp?:$/ do |pass_fail, partial_output|
   end
 end
 
-Then /^the stderr should contain "([^"]*)"$/ do |partial_output|
+Then /^the stderr should contain "([^\"]*)"$/ do |partial_output|
   @last_stderr.should =~ regexp(partial_output)
 end
 
-Then /^the stdout should contain "([^"]*)"$/ do |partial_output|
+Then /^the stdout should contain "([^\"]*)"$/ do |partial_output|
   @last_stdout.should =~ regexp(partial_output)
 end
 
-Then /^the stderr should not contain "([^"]*)"$/ do |partial_output|
+Then /^the stderr should not contain "([^\"]*)"$/ do |partial_output|
   @last_stderr.should_not =~ regexp(partial_output)
 end
 
-Then /^the stdout should not contain "([^"]*)"$/ do |partial_output|
+Then /^the stdout should not contain "([^\"]*)"$/ do |partial_output|
   @last_stdout.should_not =~ regexp(partial_output)
 end
 
@@ -192,22 +192,22 @@ Then /^the following directories should not exist:$/ do |directories|
   check_directory_presence(directories.raw.map{|directory_row| directory_row[0]}, false)
 end
 
-Then /^the file "([^"]*)" should contain "([^"]*)"$/ do |file, partial_content|
+Then /^the file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
   check_file_content(file, partial_content, true)
 end
 
-Then /^the file "([^"]*)" should not contain "([^"]*)"$/ do |file, partial_content|
+Then /^the file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
   check_file_content(file, partial_content, false)
 end
 
-Then /^the file "([^"]*)" should contain exactly:$/ do |file, exact_content|
+Then /^the file "([^\"]*)" should contain exactly:$/ do |file, exact_content|
   check_exact_file_content(file, exact_content)
 end
 
-Then /^the file "([^"]*)" should match \/([^\/]*)\/$/ do |file, partial_content|
+Then /^the file "([^\"]*)" should match \/([^\/]*)\/$/ do |file, partial_content|
   check_file_content(file, /#{partial_content}/, true)
 end
 
-Then /^the file "([^"]*)" should not match \/([^\/]*)\/$/ do |file, partial_content|
+Then /^the file "([^\"]*)" should not match \/([^\/]*)\/$/ do |file, partial_content|
   check_file_content(file, /#{partial_content}/, false)
 end
