@@ -39,7 +39,15 @@ If it is desired to alter the awd then this fork provides for setting the
 working directory to something else via the ARUBA_WORKING_DIR environmental
 variable.  This must be set relative to the user's cwd.
 
-This fork also contains a <tt>rebase</tt> api method which creates soft
+This fork also provides support for a <tt>@no-aruba-tmpdir</tt> tag.  Use of
+this tag will cause Aruba to run the test application in the user's cwd
+instead of the awd.  When this tag is activated the directory contents are not
+cleared, for obvious reasons. In fact, regardless of the tag, if the awd is
+set to anything outside a directory tree containing a <tt>/tmp/</tt> portion
+then an error is raised when trying to clear the contents.  For similar reasons, when this is the case
+the <tt>rebase</tt> method also raises an error.
+
+This fork contains a <tt>rebase</tt> api method which creates soft
 (symbolic) links inside aruba's working directory to directories rooted
 at the user's own current working directory (cwd). This permits the
 application to find its configuation and support files in their usual
@@ -54,14 +62,6 @@ For example:
 This will cause Aruba to create soft links called <tt>./tmp/aruba/bin</tt>,
 <tt>./tmp/aruba/config</tt> and <tt>./tmp/aruba/lib</tt> each pointing
 to the corresponding directory in the user's cwd.
-
-This fork also provides support for a <tt>@no-aruba-tmpdir</tt> tag.  Use of
-this tag will cause Aruba to run the test application in the user's cwd
-instead of the awd.  When this tag is activated the directory contents are not
-cleared, for obvious reasons. In fact, if the awd is set to anything outside
-a directory tree containing a <tt>/tmp/</tt> portion then an error is raised
-when trying to clear the contents.  For similar reasons, when this is the case
-the <tt>rebase</tt> method also raises an error.
 
 Upstream addressed the more limtied problem of locating <code>./bin</code> 
 by adding <code>@bin</code> tag which appends <code>./bin</code> to Cucumber's
