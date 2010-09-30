@@ -26,7 +26,7 @@ Note that aruba-jbb and aruba cannot co-exist in the same project in any
 case so that I have left the library name the same as upstream.  This
 permits switching between the two in Bundler without having to alter env.rb
 as well.  However, as of v-0.2.6.3 you have the option of requiring
-aruba-jbb instead.
+<tt>aruba_jbb</tt> instead.
 
 You now have a bunch of step definitions that you can use in your features. 
 Look at aruba/cucumber_steps.rb to see all the step definitions. Look at 

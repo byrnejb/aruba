@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{aruba-jbb}
-  s.version = "0.2.6.4"
+  s.version = "0.2.6.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Aslak Hellesøy", "David Chelimsky", "James B. Byrne"]

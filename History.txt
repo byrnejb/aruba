@@ -1,3 +1,6 @@
+== 0.2.6.5 jbb
+* removed lib/aruba-jbb.rb file
+
 == 0.2.6.4 jbb
 * Fix for ruby 1.9.2 change in handling StandardError objects as strings
 
