@@ -154,7 +154,7 @@ module Aruba
       if @interactive
         interactive_output
       else
-        @last_stdout + @last_stderr
+        @last_stdout.to_s + @last_stderr.to_s
       end
     end
 

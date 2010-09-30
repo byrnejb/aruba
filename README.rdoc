@@ -1,13 +1,16 @@
 = Aruba
 
-aruba-jbb is a fork of http://github.com/aslakhellesoy/aruba
+Aruba-jbb is a fork of http://github.com/aslakhellesoy/aruba and is found
+at http://byrnejb/aruba.
 
-Aruba is a set of api methods and cucumber steps for driving out command
-line applications. The command line application can be anything, a compiled
-C program, a Java program, a Perl script - anything. 
+Aruba-jbb is a set of api methods and cucumber steps for driving out command
+line application behaviours. The command line application can be anything,
+a compiled C program, a Java program, a Perl script - anything. 
 
-Aruba may also be used to test complex configuration files for third-party
+Aruba-jbb may also be used to test complex configuration files for third-party
 applications where the software itself may not be modified.
+
+Aruba-jbb works with Ruby-1.8.7 and Ruby-1.9.2
 
 
 == Usage
