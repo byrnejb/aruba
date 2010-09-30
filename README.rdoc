@@ -66,8 +66,8 @@ This will cause Aruba to create soft links called <tt>./tmp/aruba/bin</tt>,
 <tt>./tmp/aruba/config</tt> and <tt>./tmp/aruba/lib</tt> each pointing
 to the corresponding directory in the user's cwd.
 
-Upstream addressed the more limtied problem of locating <code>./bin</code> 
-by adding <code>@bin</code> tag which appends <code>./bin</code> to Cucumber's
+Upstream addressed the more limited problem of locating <code>./bin</code> 
+by adding a <code>@bin</code> tag which appends <code>./bin</code> to Cucumber's
 LOADPATH. This technique is supported by Aruba-jbb as well.
 
 
@@ -82,7 +82,11 @@ The last version of this fork having them was 0.2.6.
 To test against specific versions of Ruby using RVM you are advised to use
 following idiom (note the comma between Ruby version numbers):
 
-<code>$ rvm 1.9.2,1.8.7 exec cucumber [flags] [arguments] </code>
+<code>$ rvm 1.9.2,1.8.7 exec rake cucumber:wip </code>
+
+or
+
+<code>$ rvm 1.9.2,1.8.7 exec cucumber </code>
 
 
 == Getting more output with tags.
