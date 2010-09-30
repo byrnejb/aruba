@@ -1,5 +1,10 @@
+== 0.2.6.3 jbb
+* Revised documentation.
+* Added aruba-jbb and aruba_jbb library calls
+* Minor extension of do have syntax - 'do(?;es)? have'
+
 == 0.2.6.2 jbb
-* merged aslak aruba-0.2.3
+* Merged aslak aruba-0.2.3
 
 == 0.2.6 jbb
 * Altered rebase method to handle Ruby 1.9 changes to String class. (JBB)

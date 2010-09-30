@@ -72,12 +72,12 @@ LOADPATH. This technique is supported by Aruba-jbb as well.
 
 Aruba once had a couple of step definitions to make it easier to test your 
 Ruby command line program with specific versions of Ruby (regardless of 
-what Ruby version you're using to invoke Cucumber).  These were removed in 
+what Ruby version you were using to invoke Cucumber).  These were removed in 
 upstream's 0.2.2 version and are no longer present in this fork either.
 The last version of this fork having them was 0.2.6.
 
 To test against specific versions of Ruby using RVM you are advised to use
-following idiom:
+following idiom (note the comma between Ruby version numbers):
 
 <code>$ rvm 1.9.2,1.8.7 exec cucumber [flags] [arguments] </code>
 
