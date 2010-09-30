@@ -9,8 +9,6 @@ C program, a Java program, a Perl script - anything.
 Aruba may also be used to test complex configuration files for third-party
 applications where the software itself may not be modified.
 
-Aruba provides support for testing using various Ruby versions (see below).
-
 
 == Usage
 
@@ -19,7 +17,13 @@ Aruba provides support for testing using various Ruby versions (see below).
 Then, just require the library in one of your Ruby files under 
 <tt>features/support</tt>
 
-  require 'aruba'  # note that aruba-jbb and aruba cannot co-exist
+  require 'aruba'
+
+Note that aruba-jbb and aruba cannot co-exist in the same project in any
+case so that I have left the library name the same as upstream.  This
+permits switching between the two in Bundler without having to alter env.rb
+as well.  However, as of v-0.2.6.3 you have the option of requiring
+aruba-jbb instead.
 
 You now have a bunch of step definitions that you can use in your features. 
 Look at aruba/cucumber_steps.rb to see all the step definitions. Look at 
@@ -59,30 +63,24 @@ a directory tree containing a <tt>/tmp/</tt> portion then an error is raised
 when trying to clear the contents.  For similar reasons, when this is the case
 the <tt>rebase</tt> method also raises an error.
 
+Upstream addressed the more limtied problem of locating <code>./bin</code> 
+by adding <code>@bin</code> tag which appends <code>./bin</code> to Cucumber's
+LOADPATH. This technique is supported by Aruba-jbb as well.
+
+
 == Ruby/RVM love
 
-Aruba has a couple of step definitions that make it easier to test your 
+Aruba once had a couple of step definitions to make it easier to test your 
 Ruby command line program with specific versions of Ruby (regardless of 
-what Ruby version you're using to invoke Cucumber).
+what Ruby version you're using to invoke Cucumber).  These were removed in 
+upstream's 0.2.2 version and are no longer present in this fork either.
+The last version of this fork having them was 0.2.6.
 
-This is done with the follwoing step definitions:
+To test against specific versions of Ruby using RVM you are advised to use
+following idiom:
 
-  /^I am using rvm "([^"]*)"$/
-  /^I am using rvm gemset "([^"]*)"$/
+<code>$ rvm 1.9.2,1.8.7 exec cucumber [flags] [arguments] </code>
 
-Then, if you use the step definition:
-
-  /^I run "(.*)"$/
-
-.. with a command that starts with <tt>ruby</tt>, Aruba will actually invoke 
-the Ruby version (and gemset if you specified) instead of just <tt>ruby</tt>, 
-which would be the one on your <tt>PATH</tt>, which might not be the one you 
-want. The same goes for commands starting with <tt>bundle</tt>,
-<tt>cucumber</tt>, <tt>gem</tt>, <tt>jeweler</tt>, <tt>rails</tt>, 
-<tt>rake</tt>, <tt>rspec</tt> and <tt>spec</tt> -
-they can all be run with a particular Ruby version that you specify.
-
-See features/running_ruby.feature for examples.
 
 == Getting more output with tags.
 
@@ -97,32 +95,39 @@ tags on individual scenarios, or on a feature. The tags are:
 * <tt>@announce-env</tt> - See environment variables set by Aruba
 * <tt>@announce</tt> - Does all of the above
 
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
 * Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
+* Add tests for it. This is important so that we do not break it in a
   future version unintentionally.
 * Commit, do not mess with rakefile, version, or history.
   (if you want to have your own version, that is fine but bump 
   version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
+
 == Note on Aruba-JBB Step Definitions
 
 This fork has extensively refactoried both the API and the Step
-Definitions.  There is some breakage with the step definitions 
-provided with the parent.  Mostly these have to do with making
-Aruba-jbb steps more specific so as to avoid anticipated collisions
-with the user's own steps.  On the other hand, most Aruba-jbb steps
-are defined as sub strings so that the subject is no longer part of
-the matcher.  For example, instead of:
+Definitions.  There are some minor syntax differences with the 
+step definitions matchers provided with the parent.  Mostly these
+have to do with making Aruba-jbb steps more specific so as to
+avoid anticipated collisions with the user's own steps and to
+regularlize usage.  For example <em>do have</em> instead of simply
+<em>have</em>. Further, except in a very few cases, these step
+matchers have removed the start of line and end of line anchors
+together with most of the subject predicates so as to allow more
+flexible sentence formulation.  
+
+For example, instead of:
 
 <tt>When /^I have a file named "([^\"]*)"$/ do |file|</tt>
 
 This fork uses:
 
-<tt>When /do have a file named "([^\"]*)"$/ do |file|</tt>
+<tt>When /do(?:es)? have a file named "([^\"]*)"$/ do |file|</tt>
 
 So in your features you can write this:
 
@@ -131,36 +136,31 @@ So in your features you can write this:
 <tt> When we do have a file named "test"</tt>
 .  .  .
 <tt> When they do have a file named "test"</tt>
+.  .  .
+<tt> When the user does have a file named "test"</tt>
 
 == Note on Aruba-JBB Development Testing
 
-This fork has not tested the JRuby features.  It has also disabled 
-RCov in the Rake file and removed dependencies on beta versions of
-RSpec.
+All previously encountered testing exceptions have been resolved.
+This version now passes all upstream tests and several more besides. 
 
-There is a problem with loading Ruby libraries from rake which causes
-Gherkin not to be found by Cucumber when Aruba features are exercised
-using Rake (<tt>rake</tt> or <tt>rake cucumber</tt>).  Nonetheless, all 
-features not using JRuby pass when exercised using <tt>cucumber features</tt>.  
 
-You can contact me at byrnejb@jharte-lyne.ca.  I also monitor the 
-cukes@googlegroups.com mailing list.
-
-== Note on Cucumber-Rails
+== Note on Aruba (mainline)
 
 I have renamed this gem since it has now evolved considerably away
 from the baseline although, in the main, compatiblity between the
-the two remains quite high. Nonetheless, to avoid collisions Aruba
-must be removed (or uninstalled) if you wish to use Aruba-jbb.  
+the two remains quite high for the end-user.  Obviously, if you
+load both Aruba and Aruba-jbb in the same test process then you 
+are going to encounter step matcher collisions. So, do not do that.
 
-However, Cucumber-Rails v0.3.2 has a dependency on Aruba which will
-result in the Aruba baseline gem being installed whenever 
-Cucumber-Rails is installed or updated.  Therefore the baseline Aruba
-gem must be removed after updating Cucumber-Rails and the dependency
-warning ignored.
 
 == Copyright
 
-Copyright (c) 2010 Aslak Hellesøy and David Chelimsky. See LICENSE for details.
+Portions Copyright (c) 2010 Aslak Hellesøy and David Chelimsky. 
+Portions copyright (c) 2010 James B. Byrne.
+See LICENSE for details.
 
-Portions copyright (c) 2010 James B. Byrne.  Released under the same LICENSE.
+== Support
+
+You can contact me at byrnejb@jharte-lyne.ca.  I also monitor the 
+cukes@googlegroups.com mailing list.
