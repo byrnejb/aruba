@@ -1,3 +1,7 @@
+== 0.2.6.6 jbb
+* reverted run api method to old implementation and removed background_process
+
+
 == 0.2.6.5 jbb
 * removed lib/aruba-jbb.rb file
 

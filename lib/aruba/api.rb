@@ -323,7 +323,7 @@ module Aruba
       end
     end
 
-
+=begin
     def run(cmd, fail_on_error=true)
       cmd = detect_ruby(cmd)
 
@@ -335,8 +335,30 @@ module Aruba
         @last_stdout = ps.stdout.read
         announce_or_puts(@last_stdout) if @announce_stdout
         @last_stderr = ps.stderr.read
-        announce_or_puts(@last_stderr) if @announce_stderr
       end
+=end
+    
+    def run(cmd, fail_on_error=true)
+      cmd = detect_ruby(cmd)
+
+      stderr_file = Tempfile.new('cucumber')
+      stderr_file.close
+      in_current_dir do
+        announce_or_puts("$ cd #{Dir.pwd}") if @announce_dir
+        announce_or_puts("$ #{cmd}") if @announce_cmd
+
+        mode = RUBY_VERSION =~ /^1\.9/ ? {:external_encoding=>"UTF-8"} : 'r'
+        
+        IO.popen("unset BUNDLE_PATH && unset BUNDLE_BIN_PATH && unset BUNDLE_GEMFILE && #{cmd} 2> #{stderr_file.path}", mode) do |io|
+          @last_stdout = io.read
+          announce_or_puts(@last_stdout) if @announce_stdout
+        end
+
+        @last_exit_status = $?.exitstatus
+      end
+
+      @last_stderr = IO.read(stderr_file.path)
+      announce_or_puts(@last_stderr) if @announce_stderr
 
       if(@last_exit_status != 0 && fail_on_error)
         fail("Exit status was #{@last_exit_status}. Output:\n#{combined_output}")
