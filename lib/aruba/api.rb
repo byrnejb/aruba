@@ -149,8 +149,6 @@ module Aruba
 
 
     def combined_output
-      @last_stdout ||= ""
-      @last_stderr ||= ""
       if @interactive
         interactive_output
       else
