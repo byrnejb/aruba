@@ -2,10 +2,10 @@
 
 Gem::Specification.new do |s|
   s.name = %q{aruba-jbb}
-  s.version = "0.2.6.6"
+  s.version = "0.2.6.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Aslak Hellesøy", "David Chelimsky", "James B. Byrne"]
+  s.authors = ["Aslak Hellesøy", "David Chelimsky", "James B. Byrne", "Mike Sassak"]
   s.date = %q{2010-09-29}
   s.description = %q{Fork of Aruba, Cucumber steps for testing CLI applications.}
   s.email = %q{cukes@googlegroups.com}

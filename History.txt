@@ -1,6 +1,10 @@
+== 0.2.6.7 msassak
+
+=== Bug fixes
+* Outputting large amounts of data causes BackgroundProcess#exitstatus to hang (#18 Mike Sassak)
+
 == 0.2.6.6 jbb
 * reverted run api method to old implementation and removed background_process
-
 
 == 0.2.6.5 jbb
 * removed lib/aruba-jbb.rb file

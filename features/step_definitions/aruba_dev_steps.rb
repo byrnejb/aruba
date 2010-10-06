@@ -77,3 +77,7 @@ end
 When /^the following step should fail with Spec::Expectations::ExpectationNotMetError:$/ do |multiline_step|
   proc {steps multiline_step}.should raise_error(RSpec::Expectations::ExpectationNotMetError)
 end
+
+Then /^the output should be (\d+) bytes long$/ do |length|
+  combined_output.length.should == length.to_i 
+end
