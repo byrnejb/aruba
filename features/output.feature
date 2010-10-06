@@ -5,10 +5,11 @@ Feature: Output
   I want to use the "the output should contain" step
 
   Scenario: Run unknown command
-    When I run "neverever gonna work"
+    When I run "neverever gonna work"   
+    #""" sh: neverever: command not found """ for shell run implementation
     Then the output should contain:
     """
-    sh: neverever: command not found
+    No such file or directory - neverever gonna work
     """
 
   Scenario: Detect subset of one-line output

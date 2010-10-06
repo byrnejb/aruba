@@ -252,7 +252,7 @@ module Aruba
 
 
     def interactive_output
-      if @interactive
+      @_interactive ||= if @interactive
         @interactive.wait(1) || @interactive.kill('TERM')
         @interactive.stdout.read
       else
@@ -322,25 +322,22 @@ module Aruba
         ENV[key] = value
       end
     end
-
-=begin
+    
     def run(cmd, fail_on_error=true)
       cmd = detect_ruby(cmd)
+
 
       in_current_dir do
         announce_or_puts("$ cd #{Dir.pwd}") if @announce_dir
         announce_or_puts("$ #{cmd}") if @announce_cmd
         ps = BackgroundProcess.run(cmd)
-        @last_exit_status = ps.exitstatus # waits for the process to finish
         @last_stdout = ps.stdout.read
         announce_or_puts(@last_stdout) if @announce_stdout
         @last_stderr = ps.stderr.read
+        @last_exit_status = ps.exitstatus # waits for the process to finish
       end
-=end
-    
-    def run(cmd, fail_on_error=true)
-      cmd = detect_ruby(cmd)
 
+=begin
       stderr_file = Tempfile.new('cucumber')
       stderr_file.close
       in_current_dir do
@@ -359,6 +356,7 @@ module Aruba
 
       @last_stderr = IO.read(stderr_file.path)
       announce_or_puts(@last_stderr) if @announce_stderr
+=end
 
       if(@last_exit_status != 0 && fail_on_error)
         fail("Exit status was #{@last_exit_status}. Output:\n#{combined_output}")
