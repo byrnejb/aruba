@@ -1,3 +1,6 @@
+== 0.2.6.8 jbb
+* added some api method documentation
+
 == 0.2.6.7 msassak
 
 === Bug fixes

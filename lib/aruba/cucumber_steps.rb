@@ -256,3 +256,8 @@ end
 When /type "([^\"]*)"$/ do |input|
   write_interactive(ensure_newline(input))
 end
+
+
+When /(?:use|using) a clean gemset "([^\"]*)"$/ do |gemset|
+  use_clean_gemset(gemset)
+end
