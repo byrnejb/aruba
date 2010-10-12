@@ -6,7 +6,7 @@ module Aruba
   module Api
 
     # announce_or_puts(msg) is an internal helper method for
-    # reproduccing test process output in the Aruba run.
+    # reproducing test process output in the Aruba run.
     #
     def announce_or_puts(msg)
       if(@puts)
@@ -116,7 +116,7 @@ module Aruba
     # cd(path) changes aruba's working directory (awd) to path. 
     #
     # Usage:
-    #   When I cd to "foo/nonexistant" step"
+    #   When I cd to "foo/nonexistant"
     #
     def cd(dir)
       dirs << dir
@@ -133,6 +133,10 @@ module Aruba
     #   Then the following directories should exist:
     #     | foo/bar |
     #     | foo/bla |
+    #
+    #   Then the following directories should not exist:
+    #     | bar/foo |
+    #     | bar/none |
     #
     def check_directory_presence(paths, expect_presence)
       in_current_dir do
@@ -166,6 +170,18 @@ module Aruba
     # the specified file contains at least the provided text.
     #
     # Usage:
+    #   Then the file "foo" should contain:
+    #     """
+    #     My file should have this.
+    #     And this
+    #     """
+    #
+    #   Then the file "foo" should not contain:
+    #     """
+    #     My file should not have this.
+    #     And this
+    #     """
+    #
     #   Then I do have the file named "foo" with "blah"
     #
     def check_file_content(file, partial_content, expect_match)
@@ -182,8 +198,16 @@ module Aruba
 
     # check_file_presence(paths, expect_presence) operates on files in
     # a fashion similare to check_directory_presence.  it enumerates
-    # of a collection fo file names and passes or fails on the
-    # existance of each according to the expect_presence setting.
+    # on a collection of file names and passes or fails on the first
+    # existance or abscence according to the expect_presence setting.
+    #
+    # Usage:
+    #   When the following files should exist:
+    #   """
+    #   blah/file.tst
+    #   bare/file1.test
+    #   foor/barnet.tst
+    #   """
     #
     def check_file_presence(paths, expect_presence)
       in_current_dir do
@@ -225,6 +249,33 @@ module Aruba
     # combined_output is an internal helper methiod that concatenates the
     # contents of $stdout with $stderr.
     #
+    # Usage:
+    #   Then output should contain:
+    #     """
+    #     toto
+    #     red shoes
+    #     """
+    #   Then output should contain "toto"
+    #   Then output should contain exactly:
+    #     """
+    #     toto
+    #     red shoes
+    #     """
+    #   Then output should contain exactly "toto"
+    #   Then output should not contain:
+    #     """
+    #     toto
+    #     red shoes
+    #     """
+    #   Then output should not contain "toto"
+    #   Then output should not contain exactly:
+    #     """
+    #     toto
+    #     red shoes
+    #     """
+    #   Then output should not contain exactly "toto"
+    #   
+    #
     def combined_output
       if @interactive
         interactive_output
@@ -255,7 +306,8 @@ module Aruba
     #     This is in my new file.
     #     And so is this
     #     """
-    #     
+    #   When I do have an empty file named "empty
+    #   "
     def create_file(file_name, file_content, check_presence = false)
       in_current_dir do
         raise "expected #{file_name} to be present" if check_presence && !File.file?(file_name)
@@ -462,6 +514,8 @@ module Aruba
     #   When I run "ruby -e 'print "Name? "; my_name = gets'" interactively
     #   When I run "ruby -e 'fail' with errors
     #   When I run "ruby -e 'exit' without errors
+    #   When exit status should be 0
+    #   When exit status should not be 0
     #
     def run(cmd, fail_on_error=true)
       cmd = detect_ruby(cmd)
@@ -559,7 +613,7 @@ module Aruba
     # write_interactive(input) writes the provided string to $stdin of
     # the interactive process run by Aruba.
     # Usage
-    #   When i type "the answwer is 42"
+    #   When I type "the answwer is 42"
     #
     def write_interactive(input)
       @interactive.stdin.write(input)

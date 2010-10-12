@@ -1,7 +1,7 @@
 = Aruba
 
 Aruba-jbb is a fork of http://github.com/aslakhellesoy/aruba and is found
-at http://byrnejb/aruba.
+at http://github.com/byrnejb/aruba.
 
 Aruba-jbb is a set of api methods and cucumber steps for driving out command
 line application behaviours. The command line application can be anything,
