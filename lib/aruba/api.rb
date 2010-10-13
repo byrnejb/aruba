@@ -32,7 +32,7 @@ module Aruba
       end
     end
 
-    # aruba_working_dir simple returns the value of the current
+    # aruba_working_dir simply returns the value of the current
     # directory that aruba is running its features in. This is
     # set using the aruba_working_dir_set method from within the
     # step definitions or through the environment variable
@@ -80,8 +80,8 @@ module Aruba
       end
     end
 
-    # assert_exit_status_and_partial_output(pass_or_fail, output) is an
-    # internal helper method not really should not be used in a step definition.
+    # assert_exit_status_and_partial_output is an internal helper
+    # method that really should not be used in a step definition.
     #
     def assert_exit_status_and_partial_output(expect_to_pass, partial_output)
       assert_partial_output(partial_output)
@@ -92,22 +92,45 @@ module Aruba
       end
     end
 
-    # assert_failing_with(output) uses assert_exit_status_and_partial_output.
+    # assert_failing_with uses assert_exit_status_and_partial_output.
     # It passes the exit status expectation as false (fail) and the text
     # expected in the output to that method.
+    #
+    # Usage:
+    #   Then the program should fail with:
+    #   """
+    #   No such entry
+    #   """
+    #
+    #   Then /the program should fail with:$/ do |content|
+    #     assert_failing_with(content)
     #
     def assert_failing_with(partial_output)
       assert_exit_status_and_partial_output(false, partial_output)
     end
 
-    # assert_partial_output(partial_output)
+    # assert_partial_output test if the provided string or rexexo occurs
+    # in either $stdout or $stderr.
+    #
+    # Usage:
+    #   Then I should see "this text" in the output
+    #
+    #   Then /I should see "([^\"]*)" in the output/ do |content\
+    #     assert_partial_output(content)
+    #
     def assert_partial_output(partial_output)
       combined_output.should =~ regexp(partial_output)
     end
 
-    # assert_passing_with(output) uses assert_exit_status_and_partial_output.
+    # assert_passing_with uses assert_exit_status_and_partial_output.
     # It passes the exit status expectation as true (pass) and the text
-    # expected in the output to that method.
+    # expected in the output to that method. See assert_failing_with.
+    #
+    # Usage:
+    #   Then the program should run successfully with ""
+    #
+    #   Then /the program should run successfully with "([^\"]*)"/ do |output|
+    #     assert_passing_with(output)
     #
     def assert_passing_with(partial_output)
       assert_exit_status_and_partial_output(true, partial_output)
@@ -117,6 +140,9 @@ module Aruba
     #
     # Usage:
     #   When I cd to "foo/nonexistant"
+    #
+    #   When /I cd to "([^\"]*)"/ do |dir|
+    #     cd(dir)
     #
     def cd(dir)
       dirs << dir
@@ -138,6 +164,10 @@ module Aruba
     #     | bar/foo |
     #     | bar/none |
     #
+    #   When /following directories should exist:$/ do |directories|
+    #     check_directory_presence(directories.raw.map{
+    #       |directory_row| directory_row[0]}, true)
+    #
     def check_directory_presence(paths, expect_presence)
       in_current_dir do
         paths.each do |path|
@@ -150,8 +180,8 @@ module Aruba
       end
     end
 
-    # check_exact_file_content(file, exact_content) veries that
-    # the specified file contains exactly the provided text.
+    # check_exact_file_content veries that the specified file contains
+    # exactly the provided text.
     #
     # Usage:
     #   Then the file "foo" should contain exactly:
@@ -160,9 +190,12 @@ module Aruba
     #     And this
     #     """
     #
-    def check_exact_file_content(file, exact_content)
+    #   When /the file "([^\"]*)" should contain exactly:$/ do |file,contents|
+    #     check_exact_file_content(exact_output)
+    #
+    def check_exact_file_content(file, contents)
       in_current_dir do
-        IO.read(file).should == exact_content
+        IO.read(file).should == contents
       end
     end
 
@@ -170,7 +203,7 @@ module Aruba
     # the specified file contains at least the provided text.
     #
     # Usage:
-    #   Then the file "foo" should contain:
+    #   Then the file named "foo" should contain:
     #     """
     #     My file should have this.
     #     And this
@@ -182,7 +215,8 @@ module Aruba
     #     And this
     #     """
     #
-    #   Then I do have the file named "foo" with "blah"
+    #   When /the file named "foo" should contain:$/ do |file, content|
+    #     check_file_content(file, content, true)
     #
     def check_file_content(file, partial_content, expect_match)
       regexp = regexp(partial_content)
@@ -196,10 +230,10 @@ module Aruba
       end
     end
 
-    # check_file_presence(paths, expect_presence) operates on files in
-    # a fashion similare to check_directory_presence.  it enumerates
-    # on a collection of file names and passes or fails on the first
-    # existance or abscence according to the expect_presence setting.
+    # check_file_presence operates on files in a fashion similar
+    # to check_directory_presence.  it enumerates on a collection
+    # of file names and passes or fails on the first presence or
+    # abscence in the filesystem according to the expect_presence setting.
     #
     # Usage:
     #   When the following files should exist:
@@ -208,6 +242,8 @@ module Aruba
     #   bare/file1.test
     #   foor/barnet.tst
     #   """
+    #   When /following files? should exist:$/ do |files|
+    #     check_file_presence(files.raw.map{|file_row| file_row[0]}, true)
     #
     def check_file_presence(paths, expect_presence)
       in_current_dir do
@@ -221,9 +257,9 @@ module Aruba
       end
     end
   
-    # clean_up(dir = current_dir) is an internal helper method that empties
-    # the current working directory of all content. It is used in the 
-    # Aruba before hook to clear out the awd at the start of each scenario.
+    # clean_up is an internal helper method that empties the current working
+    # directory of all content. It is used in the  Aruba before hook to clear
+    # out the awd at the start of each scenario.
     #
     # It will not clear any directory that does not contain the directory
     # <tt>/tmp/</tt> somewhare in its path.
@@ -238,8 +274,8 @@ module Aruba
       end
     end
 
-    # clean_up!(dir = current_dir).  Internal helper method.  Does not check
-    # for tmp directory path.
+    # clean_up! is an Internal helper method that clears the awd without
+    # checking for tmp in the directory path.  Do not use this.
     #
     def clean_up!(dir = current_dir)
       FileUtils.rm_rf(dir)
@@ -275,6 +311,8 @@ module Aruba
     #     """
     #   Then output should not contain exactly "toto"
     #   
+    #   When /output should contain "([^\"]*)"$/ do |partial_output|
+    #     combined_output.should =~ regexp(partial_output)
     #
     def combined_output
       if @interactive
@@ -284,11 +322,14 @@ module Aruba
       end
     end
 
-    # create_dir(dir_name) creates the given directory name within the awd
+    # create_dir creates the given directory name within the awd
     # subject to normal filesystem restrictions.
     # 
     # `Usage:
     #   Given I do have a directory named "foobar"$
+    #
+    #   When /I do have a directory named "([^\"]*)"$/ do |dir_name|
+    #     create_dir(dir_name)
     #
     def create_dir(dir_name)
       in_current_dir do
@@ -296,9 +337,9 @@ module Aruba
       end
     end
 
-    # create_file(file_name, file_content, check_presence = false) creates
-    # the given file name in the awd and fills it with the provided content,
-    # optionally checking first to see if the file exists.
+    # create_file creates the given file name in the awd and fills it
+    # with the provided content, optionally checking first to see if 
+    # the file exists.
     #
     # Usage:
     #   When we do have a file named "foo" containing:
@@ -306,8 +347,15 @@ module Aruba
     #     This is in my new file.
     #     And so is this
     #     """
-    #   When I do have an empty file named "empty
-    #   "
+    #
+    #   When /do have a file named "([^\"]*)" containing:$/ do |file, content|
+    #     create_file(file, content)
+    #
+    #   When I do have an empty file named "empty"
+    #
+    #   When /I do have an empty file named "([^\"]*)"$/ do |file_name|
+    #     create_file(file_name, "")
+    #   
     def create_file(file_name, file_content, check_presence = false)
       in_current_dir do
         raise "expected #{file_name} to be present" if check_presence && !File.file?(file_name)
@@ -331,10 +379,10 @@ module Aruba
         RbConfig::CONFIG['ruby_install_name'])
     end
 
-    # detect_ruby(cmd) is an internal helper method that checks to see
-    # if the Aruba test cli command is ruby itself and returns the
-    # value of current_ruby to the <tt>run</tt> method and the value
-    # of cmd otherwise.
+    # detect_ruby is an internal helper method that checks to see
+    # if the Aruba test cli command is ruby itself. If so then it returns
+    # the value of current_ruby to the <tt>run</tt> method. If not then
+    # it returns the the value of cmd.
     #
     def detect_ruby(cmd)
       if cmd =~ /^ruby\s/
@@ -345,13 +393,13 @@ module Aruba
     end
 
     # This provides a regexp of commonly encountered Ruby scripts
-    # for use in testing Aruba itself.
+    # for use in testing Aruba itself. Used by detect_ruby_script.
     #
     COMMON_RUBY_SCRIPTS = \
       /^(?:bundle|cucumber|gem|jeweler|rails|rake|rspec|spec)\s/ 
 
     # detect_ruby_script is an internal helper script used in testing
-    # Aruba itself.
+    # Aruba itself. Uses COMMON_RUBY_SCRIPTS.
     #
     def detect_ruby_script(cmd)
       if cmd =~ COMMON_RUBY_SCRIPTS
@@ -377,14 +425,14 @@ module Aruba
       @dirs << aruba_working_dir
     end
 
-    # ensure_newline(str) is an internal helper method used to test interactive
+    # ensure_newline is an internal helper method used to test interactive
     # CLI programs with Aruba.
     #
     def ensure_newline(str)
       str.chomp << "\n"
     end
 
-    # in_current_dir(&block) is an internal helper method wherein all the magic
+    # in_current_dir is an internal helper method wherein all the magic
     # of Aruba takes place.  It uses the value of current_dir to determine
     # what directory to change to before running Aruba steps.
     #
@@ -393,9 +441,10 @@ module Aruba
       Dir.chdir(current_dir, &block)
     end
 
-    # install_gems(gemfile) internal helper method that uses Bundler to
-    # install the gems specified int he given Gemfile name into the
-    # current Ruby VM.
+    # install_gems internal helper method that uses up Bundler to
+    # install the gems specified in the given Gemfile name into the
+    # current Ruby VM.  If Bundler is not present then this method will
+    # attempt to install it.
     #
     def install_gems(gemfile)
       create_file("Gemfile", gemfile)
@@ -405,8 +454,8 @@ module Aruba
       end
     end
 
-    # interactive_output an internal  helper method that provides the contents
-    # of $stdout from interactive Aruba processes.
+    # interactive_output is an internal helper method that provides
+    # the contents of $stdout from interactive Aruba processes.
     # 
     def interactive_output
       @_interactive ||= if @interactive
@@ -417,11 +466,14 @@ module Aruba
       end
     end
 
-    # original_env is an internal helper method that returns a hash of the
-    # original env variables and their values for restore_original_env
-    #
-    def original_env
-      @original_env ||= {}
+    # Attribute.
+    def last_stderr
+      @last_stderr
+    end
+
+    # Attribute
+    def last_stdout
+      @last_stdout
     end
 
     # _mkdir(dir_name) is an internal helper name that does exactly as its
@@ -431,13 +483,23 @@ module Aruba
       FileUtils.mkdir_p(dir_name) unless File.directory?(dir_name)
     end
 
-    # rebase(dirs=nil) creates a symbolic link in the awd to each directory
-    # contained in the passed array that are named relative to the user's
+    # original_env is an internal helper method that returns a hash of the
+    # original env variables and their values for use in restore_original_env
+    #
+    def original_env
+      @original_env ||= {}
+    end
+
+    # rebase creates a symbolic link in the awd to each directory
+    # contained in the passed array.Each entry is named relative to the user's
     # cwd.  It first checkes that the awd path contains a directory named
     # <tt>/tmp/</tt> and fails if it does not.
     #
     # Usage:
-    #   When I rebase the directory "bar/foo"$
+    #   When I rebase the directory named "bar/foo"$
+    #
+    #   When /I rebase the directory named "([^\"]*)"$/ do |dir|
+    #     rebase(dir)
     #
     def rebase(dirs=nil)
 
@@ -462,7 +524,7 @@ module Aruba
       @aruba_rebase_dirs
     end
 
-    # rebase_dirs_add(dirs=nil) is an internal helper method that
+    # rebase_dirs_add is an internal helper method that
     # adds directory names to the rebase_dirs array.
     #
     def rebase_dirs_add(dirs=nil)
@@ -492,7 +554,10 @@ module Aruba
     #   Then stdout should contain "this"
     #   Then stderr should not contain "this"
     #   Then stdout should not contain "this"
-    #   
+    #      
+    #   When /stderr should contain "([^\"]*)"$/ do |partial_output|
+    #     last_stderr.should =~ regexp(partial_output)
+
     def regexp(string_or_regexp)
       Regexp === string_or_regexp ? string_or_regexp : Regexp.compile(Regexp.escape(string_or_regexp))
     end
