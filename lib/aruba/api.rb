@@ -1,3 +1,4 @@
+require 'timeout'
 require 'tempfile'
 require 'rbconfig'
 require 'background_process'
@@ -316,9 +317,13 @@ module Aruba
     #
     def combined_output
       if @interactive
-        interactive_output
+        interactive_output.to_s
       else
-        @last_stdout.to_s + @last_stderr.to_s
+        if @last_stderr != nil and @last_stderr != ""
+          @last_stdout.to_s + @last_stderr.inspect.to_s
+        else
+          @last_stdout.to_s
+        end
       end
     end
 
@@ -570,38 +575,74 @@ module Aruba
         ENV[key] = value
       end
     end
+
+    class ProcessTimeout < Timeout::Error; end
+    # Set the default timeout in seconds for external process to finish
+    # May be overrriden by setting environment variable ARUBA_RUN_TIMEOUT
+    ARUBA_RUN_TIMEOUT_DEFAULT = 2
     
-    # run(cmd, fail_on_error=true) is the internal helper method that actually
-    # runs the test executable, optionally failing if the exit status != 0.
+    # run is the internal helper method that actually runs the external 
+    # test process, optionally failing if the exit status != 0.  Takes an
+    # optional thrid parameter to specific maximum time process should
+    # take befor exiting.
     #
     # Usage:
     #   When I run "ruby -e 'puts "hello world"'
     #   When I run "ruby -e 'print "Name? "; my_name = gets'" interactively
     #   When I run "ruby -e 'fail' with errors
     #   When I run "ruby -e 'exit' without errors
-    #   When exit status should be 0
-    #   When exit status should not be 0
     #
-    def run(cmd, fail_on_error=true)
+    #   When /I run a long process without error/ do
+    #       run(long_process, true, 15) # allow 15 seconds.
+    #
+    #   When /run "(.*)" with timeout of "()" seconds$/ do |cmd, time|
+    #     run(unescape(cmd), true, time.to_f)
+    #   end
+    def run(cmd, fail_on_error=true, tlimit=nil)
+
+      @last_stderr = ""
+      @last_stdout = ""
       cmd = detect_ruby(cmd)
 
+      if tlimit == nil
+        if defined?(ENV[ARUBA_RUN_TIMEOUT])
+          tlimit = ENV[ARUBA_RUN_TIMEOUT]
+        else
+          tlimit = ARUBA_RUN_TIMEOUT_DEFAULT
+        end
+      else
+        tlimit = tlimit.to_f
+      end 
 
       in_current_dir do
         announce_or_puts("$ cd #{Dir.pwd}") if @announce_dir
         announce_or_puts("$ #{cmd}") if @announce_cmd
-        ps = BackgroundProcess.run(cmd)
-        @last_stdout = ps.stdout.read 
-        announce_or_puts(@last_stdout) if @announce_stdout
-        @last_stderr = ps.stderr.read
-        announce_or_puts(@last_stderr) if @announce_stderr
-        @last_exit_status = ps.exitstatus # Waits for process to finish
+        begin
+          Timeout::timeout(tlimit, ProcessTimeout) {
+            ps = BackgroundProcess.run(cmd)
+            @last_stdout = ps.stdout.read 
+            announce_or_puts(@last_stdout) if @announce_stdout
+            @last_stderr = ps.stderr.read
+            announce_or_puts(@last_stderr) if @announce_stderr 
+          # Waits for process to finish or timeout
+            @last_exit_status = ps.exitstatus
+          }
+        rescue ProcessTimeout => e
+          if @last_stderr 
+            @last_stderr += e.inspect
+          else
+            @last_stderr = e.inspect
+          end
+          @last_exit_status = -1
+          announce_or_puts(@last_exit_status.to_i.to_s) if @announce_stderr
+          announce_or_puts(@last_stderr) if @announce_stderr
+        end
       end
 
       if(@last_exit_status != 0 && fail_on_error)
         fail("Exit status was #{@last_exit_status}. Output:\n#{combined_output}")
       end
 
-      @last_stderr
     end
     
     # run_interactive(cmd) is an internal helper method that runs CLI

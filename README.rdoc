@@ -28,9 +28,13 @@ permits switching between the two in Bundler without having to alter env.rb
 as well.  However, as of v-0.2.6.3 you have the option of requiring
 <tt>aruba_jbb</tt> instead.
 
-You now have a bunch of step definitions that you can use in your features. 
-Look at aruba/cucumber_steps.rb to see all the step definitions. Look at 
+You now have sever api mehtods and a selection of step definitions that
+you can use in features that test stand-alone processes.  Look at 
+aruba/cucumber_steps.rb to see all the step definitions. Look at 
 features/*.feature for examples (which are also testing Aruba itself).
+A start has been made at  documenting the api as well.  Any suggestions
+to improve what is already there, or to provide whatever is missing, are
+most welcome.
 
 You should be aware that Aruba runs the application it tests and creates
 all local output in its own working directory (awd). The awd defaults to
@@ -70,14 +74,28 @@ Upstream addressed the more limited problem of locating <code>./bin</code>
 by adding a <code>@bin</code> tag which appends <code>./bin</code> to Cucumber's
 LOADPATH. This technique is supported by Aruba-jbb as well.
 
+The aruba <tt>run</tt> api method is now (0.2.6.9) surrounded by a timeout call.
+This means that after the default period of 2 seconds any process under test
+is forceably terminated.  However, be advised that the run api methods raises 
+no error is raised by default.Instead the process exit status is set to -1 and
+stderr will contain <em>Aruba::Api::ProcessTimeout: execution expired</em>.  
+You are therefore advised to either override the When /run "([^\"])"/ do |cmd|
+step definition or provide an alternative form.
 
-== Ruby/RVM love
+The default timeout value of 2 may be overriden either by defining an environmental
+variable called ARUBA_RUN_TIMEOUT to the approprate value (in seconds) or by
+passing an optional third parameter to the run api method.  Fractional values
+are acepted but granularity of less than interger seconds is not guarenteed to
+work. 
 
-Aruba once had a couple of step definitions to make it easier to test your 
-Ruby command line program with specific versions of Ruby (regardless of 
-what Ruby version you were using to invoke Cucumber).  These were removed in 
-upstream's 0.2.2 version and are no longer present in this fork either.
-The last version of this fork having them was 0.2.6.
+Timeout does not work for the run_interactive api method. This is experimaental
+code merged from Mike Sassak's fork.
+
+== Ruby/RVM
+
+Aruba once had api methods to run rvm ruby from inside aruba. These
+were removed in upstream's 0.2.2 version and are no longer present in this
+fork either. The last version of this fork having them was 0.2.6.
 
 To test against specific versions of Ruby using RVM you are advised to use
 following idiom (note the comma between Ruby version numbers):

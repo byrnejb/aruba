@@ -1,10 +1,15 @@
+== 0.2.6.9 jbb
+* added timeout method and basic support step definitions
+* somewhat improved api documentation
+
 == 0.2.6.8 jbb
 * added some api method documentation
 
 == 0.2.6.7 msassak
+* Returned to using Background_Process
 
 === Bug fixes
-* Outputting large amounts of data causes BackgroundProcess#exitstatus to hang (#18 Mike Sassak)
+* Outputting large amounts of data causes BackgroundProcess to hang
 
 == 0.2.6.6 jbb
 * reverted run api method to old implementation and removed background_process

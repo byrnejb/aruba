@@ -38,6 +38,7 @@ Feature: Output
       good-bye
       """
 
+  @announce
   Scenario: Detect exact one-line output
     When I run "ruby -e 'puts \"hello world\"'"
     Then the output should contain exactly "hello world\n"

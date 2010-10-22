@@ -56,6 +56,16 @@ When /clean up the working directory/ do
 end
 
 
+When /display stderr/ do
+  announce_or_puts(last_stderr)
+end
+
+
+When /display stdout/ do
+  announce_or_puts(last_stdout)
+end
+
+
 When /do(?:es)? have (?:a|the) directory named "([^\"]*)"$/ do |dir_name|
   create_dir(dir_name)
 end
@@ -72,12 +82,13 @@ When /do(?:es)? have an empty file named "([^\"]*)"$/ do |file_name|
 end
 
 
-When /exit status should be (\d+)$/ do |exit_status|
+When /exit status should be (-?\d+)$/ do |exit_status|
   @last_exit_status.should == exit_status.to_i
 end
 
 
-When /exit status should not be (\d+)$/ do |exit_status|
+When /exit status should not be (-?\d+)$/ do |exit_status|
+  @last_exit_status.should_not == nil
   @last_exit_status.should_not == exit_status.to_i
 end
 
@@ -193,13 +204,18 @@ When /run "(.*)"$/ do |cmd|
 end
 
 
-When /run "([^\"]*)" interactively$/ do |cmd|
+When /run "(.*)" interactively$/ do |cmd|
   run_interactive(unescape(cmd))
 end
 
 
 When /run "(.*)" with errors?$/ do |cmd|
   run(unescape(cmd), false)
+end
+
+
+When /run "(.*)" with timeout of "(\d+\.?\d*)" seconds$/ do |cmd, time|
+  run(unescape(cmd), true, time.to_f)
 end
 
 
