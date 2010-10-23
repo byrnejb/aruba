@@ -579,7 +579,7 @@ module Aruba
     class ProcessTimeout < Timeout::Error; end
     # Set the default timeout in seconds for external process to finish
     # May be overrriden by setting environment variable ARUBA_RUN_TIMEOUT
-    ARUBA_RUN_TIMEOUT_DEFAULT = 2
+    ARUBA_RUN_TIMEOUT_DEFAULT = 5
     
     # run is the internal helper method that actually runs the external 
     # test process, optionally failing if the exit status != 0.  Takes an
@@ -604,7 +604,7 @@ module Aruba
       @last_stdout = ""
       cmd = detect_ruby(cmd)
 
-      if tlimit == nil
+      if tlimit == nil || tlimit == ""
         if defined?(ENV[ARUBA_RUN_TIMEOUT])
           tlimit = ENV[ARUBA_RUN_TIMEOUT]
         else
