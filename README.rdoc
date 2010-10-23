@@ -28,7 +28,7 @@ permits switching between the two in Bundler without having to alter env.rb
 as well.  However, as of v-0.2.6.3 you have the option of requiring
 <tt>aruba_jbb</tt> instead.
 
-You now have several api mehtods and a selection of step definitions that
+You now have several api methods and a selection of step definitions that
 you can use in features that test stand-alone processes.  Look at 
 aruba/cucumber_steps.rb to see all the step definitions. Look at 
 features/*.feature for examples (which are also testing Aruba itself).
