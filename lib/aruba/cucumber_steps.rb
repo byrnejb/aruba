@@ -209,20 +209,25 @@ When /run "(.*)" interactively$/ do |cmd|
 end
 
 
-When /run "(.*)" with errors?(?: and timeout of "(\d+\.?\d*)" seconds)?$/\
+When /run "(.*)" with errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
   do |cmd, time|
   run(unescape(cmd), false, time)
 end
 
 
-When /run "(.*)" with timeout of "(\d+\.?\d*)" seconds$/ do |cmd, time|
+When /run "(.*)" with timeout of "(\d+\.?\d*)" seconds?$/ do |cmd, time|
   run(unescape(cmd), true, time)
 end
 
 
-When /run "(.*)" without errors?(?: and timeout of "(\d+\.?\d*)" seconds)?$/\
+When /run "(.*)" without errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
   do |cmd, time|
   run(unescape(cmd), true, time)
+end
+
+
+When /set the env variable "([^\"]*)" to "(\d+\.?\d*)" seconds?$/ do |var, val|
+  ENV[var] = val
 end
 
 

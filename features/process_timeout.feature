@@ -6,7 +6,7 @@ Feature: process should timeout
 
   
   Scenario: process runner times out for long process
-    When I run "ruby -e 'sleep(12)'"
+    When I run "ruby -e 'sleep(21)'"
     Then the exit status should not be 0
       And stderr should contain "execution expired"
 
@@ -20,6 +20,17 @@ Feature: process should timeout
 
   
   Scenario: process runner timeout can be set higher than default
-    When I run "ruby -e 'sleep(4)'" with timeout of "5.7" seconds
+    When I run "ruby -e 'sleep(21)'" with timeout of "22" seconds
     Then the exit status should be 0
       And stderr should be empty
+      And stderr should not contain "execution expired"
+
+  @announce
+  Scenario: environment variable controls timeout value
+    Given I set the env variable "ARUBA_RUN_TIMEOUT" to "25" seconds
+    When I run "ruby -e 'sleep(21)'" 
+    Then the exit status should be 0
+    When I set the env variable "ARUBA_RUN_TIMEOUT" to "5" seconds
+      And I run "ruby -e 'sleep(10)'"
+    Then the exit status should be -1
+      And stderr should contain "Aruba::Api::ProcessTimeout: execution expired"

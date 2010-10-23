@@ -65,19 +65,19 @@ module Aruba
     # contained in the ARUBA_REBASE environmental variable, if found.
     #
     def aruba_working_dir_init
-
+      
       @aruba_working_dir = [ARUBA_WORKING_DIR_DEFAULT]
 
-      if defined?(ENV[ARUBA_WORKING_DIR])
-        @aruba_working_dir = [ENV[ARUBA_WORKING_DIR]] 
+      if ( ENV['ARUBA_WORKING_DIR'] != nil )
+        @aruba_working_dir = [ENV['ARUBA_WORKING_DIR']] 
       end
 
       dirs_init
       clean_up
       rebase_dirs_clear
 
-      if defined?(ENV[ARUBA_REBASE])
-        rebase(ENV[ARUBA_REBASE].split(%r{,|;\s*}))
+      if ( ENV['ARUBA_REBASE'] != nil )
+        rebase(ENV['ARUBA_REBASE'].split(%r{,|;\s*}))
       end
     end
 
@@ -579,7 +579,7 @@ module Aruba
     class ProcessTimeout < Timeout::Error; end
     # Set the default timeout in seconds for external process to finish
     # May be overrriden by setting environment variable ARUBA_RUN_TIMEOUT
-    ARUBA_RUN_TIMEOUT_DEFAULT = 5
+    ARUBA_RUN_TIMEOUT_DEFAULT = 20
     
     # run is the internal helper method that actually runs the external 
     # test process, optionally failing if the exit status != 0.  Takes an
@@ -595,9 +595,12 @@ module Aruba
     #   When /I run a long process without error/ do
     #       run(long_process, true, 15) # allow 15 seconds.
     #
-    #   When /run "(.*)" with timeout of "()" seconds$/ do |cmd, time|
+    #   When /run "(.*)" with timeout of "(\d+\.\d*)" seconds$/ do |cmd, time|
     #     run(unescape(cmd), true, time.to_f)
     #   end
+    #
+    #   When I set the env variable "SOME_THING" to "some value" 
+    #
     def run(cmd, fail_on_error=true, tlimit=nil)
 
       @last_stderr = ""
@@ -605,20 +608,18 @@ module Aruba
       cmd = detect_ruby(cmd)
 
       if tlimit == nil || tlimit == ""
-        if defined?(ENV[ARUBA_RUN_TIMEOUT])
-          tlimit = ENV[ARUBA_RUN_TIMEOUT]
+        if ( ENV['ARUBA_RUN_TIMEOUT'] != nil ) 
+          tlimit = ENV['ARUBA_RUN_TIMEOUT']
         else
           tlimit = ARUBA_RUN_TIMEOUT_DEFAULT
         end
-      else
-        tlimit = tlimit.to_f
-      end 
+      end
 
       in_current_dir do
         announce_or_puts("$ cd #{Dir.pwd}") if @announce_dir
         announce_or_puts("$ #{cmd}") if @announce_cmd
         begin
-          Timeout::timeout(tlimit, ProcessTimeout) {
+          Timeout::timeout(tlimit.to_f, ProcessTimeout) {
             ps = BackgroundProcess.run(cmd)
             @last_stdout = ps.stdout.read 
             announce_or_puts(@last_stdout) if @announce_stdout
