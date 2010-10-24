@@ -583,8 +583,8 @@ module Aruba
     
     # run is the internal helper method that actually runs the external 
     # test process, optionally failing if the exit status != 0.  Takes an
-    # optional thrid parameter to specific maximum time process should
-    # take befor exiting.
+    # optional third parameter to specify the maximum time a process should
+    # take before exiting on its own.
     #
     # Usage:
     #   When I run "ruby -e 'puts "hello world"'

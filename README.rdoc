@@ -22,14 +22,13 @@ Then, just require the library in one of your Ruby files under
 
   require 'aruba'
 
-Note that aruba-jbb and aruba cannot co-exist in the same project in any
-case so that I have left the library name the same as upstream.  This
-permits switching between the two in Bundler without having to alter env.rb
-as well.  However, as of v-0.2.6.3 you have the option of requiring
-<tt>aruba_jbb</tt> instead.
+Note that since aruba-jbb and aruba cannot co-exist in the same project
+I have left the library name the same as upstream.  This permits switching
+between the two in Bundler without having to alter env.rb as well.  However,
+as of v-0.2.6.3 you have the option of requiring <tt>aruba_jbb</tt> instead.
 
-You now have several api methods and a selection of step definitions that
-you can use in features that test stand-alone processes.  Look at 
+You now have several api methods and a selection of step definitions available
+that you can use in features which test stand-alone processes.  Look at 
 aruba/cucumber_steps.rb to see all the step definitions. Look at 
 features/*.feature for examples (which are also testing Aruba itself).
 A start has been made at  documenting the api as well.  Any suggestions
@@ -164,6 +163,17 @@ So in your features you can write this:
 <tt> When they do have a file named "test"</tt>
 .  .  .
 <tt> When the user does have a file named "test"</tt>
+
+
+== Experimental features
+
+A new environment variable <tt>NO_ARUBA_STEPS</tt> now determines
+whether or not the step definition library shipped with aruba-jbb
+are loaded or not.  No particular value is required.  If the
+variable is defined then the default step libraries are not loaded.
+This obviously requires that you define your own steps that make
+use of the Aruba api.
+
 
 == Note on Aruba-JBB Development Testing
 
