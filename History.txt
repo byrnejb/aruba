@@ -1,3 +1,13 @@
+== 0.2.6.11 jbb
+* administrative fix to gemspec data and dependencies 
+* added NO_ARUBA_STEPS env var to not load aruba/cucumber_steps.rb library (exp)
+
+== 0.2.6.10 jbb
+* increased default timeout to 20 seconds
+
+== Bug fixes
+* fixed implementation of environment variables
+
 == 0.2.6.9 jbb
 * added timeout method and basic support step definitions
 * somewhat improved api documentation

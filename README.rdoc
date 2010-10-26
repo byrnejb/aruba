@@ -22,14 +22,13 @@ Then, just require the library in one of your Ruby files under
 
   require 'aruba'
 
-Note that aruba-jbb and aruba cannot co-exist in the same project in any
-case so that I have left the library name the same as upstream.  This
-permits switching between the two in Bundler without having to alter env.rb
-as well.  However, as of v-0.2.6.3 you have the option of requiring
-<tt>aruba_jbb</tt> instead.
+Note that since aruba-jbb and aruba cannot co-exist in the same project
+I have left the library name the same as upstream.  This permits switching
+between the two in Bundler without having to alter env.rb as well.  However,
+as of v-0.2.6.3 you have the option of requiring <tt>aruba_jbb</tt> instead.
 
-You now have sever api mehtods and a selection of step definitions that
-you can use in features that test stand-alone processes.  Look at 
+You now have several api methods and a selection of step definitions available
+that you can use in features which test stand-alone processes.  Look at 
 aruba/cucumber_steps.rb to see all the step definitions. Look at 
 features/*.feature for examples (which are also testing Aruba itself).
 A start has been made at  documenting the api as well.  Any suggestions
@@ -74,21 +73,22 @@ Upstream addressed the more limited problem of locating <code>./bin</code>
 by adding a <code>@bin</code> tag which appends <code>./bin</code> to Cucumber's
 LOADPATH. This technique is supported by Aruba-jbb as well.
 
-The aruba <tt>run</tt> api method is now (0.2.6.9) surrounded by a timeout call.
-This means that after the default period of 2 seconds any process under test
+The aruba <tt>run</tt> api method is surrounded by a timeout call.
+This means that after the default period of 20 seconds any process under test
 is forceably terminated.  However, be advised that the run api methods raises 
-no error is raised by default.Instead the process exit status is set to -1 and
+no error by default.  Instead the process exit status is set to -1 and
 stderr will contain <em>Aruba::Api::ProcessTimeout: execution expired</em>.  
 You are therefore advised to either override the When /run "([^\"])"/ do |cmd|
 step definition or provide an alternative form.
 
-The default timeout value of 2 may be overriden either by defining an environmental
+The default timeout value may be overriden either by defining an environmental
 variable called ARUBA_RUN_TIMEOUT to the approprate value (in seconds) or by
 passing an optional third parameter to the run api method.  Fractional values
 are acepted but granularity of less than interger seconds is not guarenteed to
-work. 
+work.   A helper step definition is provided to set environment variables
+for process testing.  This is documented in the api rdoc.
 
-Timeout does not work for the run_interactive api method. This is experimaental
+Timeout does not handle the run_interactive api method. This is experimaental
 code merged from Mike Sassak's fork.
 
 == Ruby/RVM
@@ -163,6 +163,17 @@ So in your features you can write this:
 <tt> When they do have a file named "test"</tt>
 .  .  .
 <tt> When the user does have a file named "test"</tt>
+
+
+== Experimental features
+
+A new environment variable <tt>NO_ARUBA_STEPS</tt> now determines
+whether or not the step definition library shipped with aruba-jbb
+are loaded or not.  No particular value is required.  If the
+variable is defined then the default step libraries are not loaded.
+This obviously requires that you define your own steps that make
+use of the Aruba api.
+
 
 == Note on Aruba-JBB Development Testing
 
