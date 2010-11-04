@@ -2,6 +2,24 @@ require 'aruba/api'
 
 World(Aruba::Api)
 
+Before('@disable-bundler') do
+  unset_bundler_env_vars
+end
+
+Before do
+  @__aruba_original_paths = (ENV['PATH'] || '').split(File::PATH_SEPARATOR)
+  ENV['PATH'] = ([File.expand_path('bin')] + @__aruba_original_paths).join(File::PATH_SEPARATOR)
+end
+
+After do
+  ENV['PATH'] = @__aruba_original_paths.join(File::PATH_SEPARATOR)
+end
+
+
+Before do
+  #FileUtils.rm_rf(current_dir)
+end
+
 
 Before do 
   aruba_working_dir_init
@@ -24,6 +42,16 @@ Before('@announce-cmd') do
 end
 
 
+Before('@announce-dir') do
+  @announce_dir = true
+end
+
+
+Before('@announce-env') do
+  @announce_env = true
+end
+
+
 Before('@announce-stdout') do
   @announce_stdout = true
 end
@@ -37,22 +65,29 @@ end
 Before('@announce') do
   @announce_stdout = true
   @announce_stderr = true
+  @announce_env = true
+  @announce_dir = true
   @announce_cmd = true
 end
 
 
-When /append to "([^\"]*)" with:$/ do |file_name, file_content|
-  append_to_file(file_name, file_content)
+Before('@puts') do
+  @puts = true
 end
 
 
-When /cd to "([^\"]*)"$/ do |dir|
-  cd(dir)
+After do
+  restore_env
 end
 
 
 When /clean up the working directory/ do
   clean_up
+end
+
+
+Given /^using a clean gemset "([^\"]*)"$/ do |gemset|
+  use_clean_gemset(gemset)
 end
 
 
@@ -72,59 +107,78 @@ When /do have an empty file named "([^\"]*)"$/ do |file_name|
 end
 
 
-When /using rvm "([^\"]*)"$/ do |rvm_ruby_version|
-  use_rvm(rvm_ruby_version)
+When /writes? to "([^\"]*)" with:$/ do |file_name, file_content|
+  create_file(file_name, file_content, false)
 end
 
 
-When /using( an empty)? rvm gemset "([^\"]*)"$/ do |empty_gemset, rvm_gemset|
-  use_rvm_gemset(rvm_gemset, empty_gemset)
+When /overwrites? "([^\"]*)" with:$/ do |file_name, file_content|
+  create_file(file_name, file_content, true)
 end
 
 
-When /using rvm gemset "([^\"]*)" with Gemfile:$/ do |rvm_gemset, gemfile|
-  use_rvm_gemset(rvm_gemset, true)
-  install_gems(gemfile)
+When /appends? to "([^\"]*)" with:$/ do |file_name, file_content|
+  append_to_file(file_name, file_content)
 end
 
 
-When /rebase the directory named "([^\"]*)"$/ do |dir|
-  rebase(dir)
+When /removes? the file "([^\"]*)"$/ do |file_name|
+  remove_file(file_name)
 end
 
 
-When /run "(.*)"$/ do |cmd|
+When /cd to "([^\"]*)"$/ do |dir|
+  cd(dir)
+end
+
+
+When /runs? "(.*)"$/ do |cmd|
   run(unescape(cmd), false)
 end
 
 
-When /run "(.*)" with errors?$/ do |cmd|
+When /runs? "(.*)" with errors?$/ do |cmd|
   run(unescape(cmd), false)
 end
 
 
-When /run "(.*)" without errors?$/ do |cmd|
+When /runs? "(.*)" without errors?$/ do |cmd|
   run(unescape(cmd), true)
 end
 
 
+When /successfully runs? "(.*)"$/ do |cmd|
+  run(unescape(cmd))
+end
+
+
+When /runs? "([^\"]*)" interactively$/ do |cmd|
+  run_interactive(unescape(cmd))
+end
+
+
+When /types? "([^\"]*)"$/ do |input|
+  write_interactive(ensure_newline(input))
+end
+
+
 When /output should contain "([^\"]*)"$/ do |partial_output|
-  combined_output.should =~ compile_and_escape(partial_output)
+  assert_partial_output(partial_output)
 end
 
 
 When /output should not contain "([^\"]*)"$/ do |partial_output|
-  combined_output.should_not =~ compile_and_escape(partial_output)
+  combined_output.should_not =~ regexp(partial_output)
 end
 
 
 When /output should contain:$/ do |partial_output|
-  combined_output.should =~ compile_and_escape(partial_output)
+  combined_output.should =~ regexp(partial_output)
 end
 
 
 When /output should not contain:$/ do |partial_output|
-  combined_output.should_not =~ compile_and_escape(partial_output)
+  combined_output.should_not =~ regexp(partial_output)
 end
 
 
@@ -162,12 +216,12 @@ When /exit status should not be (\d+)$/ do |exit_status|
 end
 
 
-When /rebase the directory "()"$/ do |dir|
-  rebase(dir.to_a)
+When /should (pass|fail) with:$/ do |pass_fail, partial_output|
+  self.__send__("assert_#{pass_fail}ing_with", partial_output)
 end
 
 
-When /should (pass|fail) with:$/ do |pass_fail, partial_output|
+When /should (pass|fail) with regexp?:$/ do |pass_fail, partial_output|
   When "output should contain:", partial_output
   if pass_fail == 'pass'
     @last_exit_status.should == 0
@@ -183,22 +237,22 @@ end
 
 
 When /stderr should contain "([^\"]*)"$/ do |partial_output|
-  @last_stderr.should =~ compile_and_escape(partial_output)
+  @last_stderr.should =~ regexp(partial_output)
 end
 
 
 When /stdout should contain "([^\"]*)"$/ do |partial_output|
-  @last_stdout.should =~ compile_and_escape(partial_output)
+  @last_stdout.should =~ regexp(partial_output)
 end
 
 
 When /stderr should not contain "([^\"]*)"$/ do |partial_output|
-  @last_stderr.should_not =~ compile_and_escape(partial_output)
+  @last_stderr.should_not =~ regexp(partial_output)
 end
 
 
 When /stdout should not contain "([^\"]*)"$/ do |partial_output|
-  @last_stdout.should_not =~ compile_and_escape(partial_output)
+  @last_stdout.should_not =~ regexp(partial_output)
 end
 
 
@@ -240,4 +294,24 @@ end
 
 When /file "([^\"]*)" should not contain:$/ do |file, partial_content|
   check_file_content(file, partial_content, false)
+end
+
+
+When /file "([^\"]*)" should match \/([^\/]*)\/$/ do |file, partial_content|
+  check_file_content(file, /#{partial_content}/, true)
+end
+
+
+When /file "([^\"]*)" should not match \/([^\/]*)\/$/ do |file, partial_content|
+  check_file_content(file, /#{partial_content}/, false)
+end
+
+
+When /rebase the directory "()"$/ do |dir|
+  rebase(dir.to_a)
+end
+
+
+When /rebase the directory named "([^\"]*)"$/ do |dir|
+  rebase(dir)
 end
