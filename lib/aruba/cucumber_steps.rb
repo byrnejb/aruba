@@ -2,6 +2,25 @@ require 'aruba/api'
 
 World(Aruba::Api)
 
+Before('@disable-bundler') do
+  unset_bundler_env_vars
+end
+
+Before do
+  @__aruba_original_paths = (ENV['PATH'] || '').split(File::PATH_SEPARATOR)
+    ENV['PATH'] = ([File.expand_path('bin')] + 
+      @__aruba_original_paths).join(File::PATH_SEPARATOR)
+end
+
+After do
+  ENV['PATH'] = @__aruba_original_paths.join(File::PATH_SEPARATOR)
+end
+
+
+Before do
+  #FileUtils.rm_rf(current_dir)
+end
+
 
 Before do 
   aruba_working_dir_init
@@ -24,6 +43,16 @@ Before('@announce-cmd') do
 end
 
 
+Before('@announce-dir') do
+  @announce_dir = true
+end
+
+
+Before('@announce-env') do
+  @announce_env = true
+end
+
+
 Before('@announce-stdout') do
   @announce_stdout = true
 end
@@ -37,16 +66,33 @@ end
 Before('@announce') do
   @announce_stdout = true
   @announce_stderr = true
+  @announce_env = true
+  @announce_dir = true
   @announce_cmd = true
 end
 
 
-When /append to "([^\"]*)" with:$/ do |file_name, file_content|
+Before('@puts') do
+  @puts = true
+end
+
+
+After do
+  restore_env
+end
+
+
+When /(?:add|set) the env variable "([^\"]*)" to "(.*)"/ do |var, val|
+  set_env(var, val)
+end
+
+
+When /appends? to "([^\"]*)" with:$/ do |file_name, file_content|
   append_to_file(file_name, file_content)
 end
 
 
-When /cd to "([^\"]*)"$/ do |dir|
+When /(?:cds?|chdirs?) to "([^\"]*)"$/ do |dir|
   cd(dir)
 end
 
@@ -61,8 +107,18 @@ When /display stderr/ do
 end
 
 
+When /(?:delete|unset) the env variable "([^\"]*)"$/ do |var|
+  remove_env(var)
+end
+
+
 When /display stdout/ do
   announce_or_puts(last_stdout)
+end
+
+
+When /using a clean gemset "([^\"]*)"$/ do |gemset|
+  use_clean_gemset(gemset)
 end
 
 
@@ -93,32 +149,48 @@ When /exit status should not be (-?\d+)$/ do |exit_status|
 end
 
 
-When /file "([^\"]*)" should contain "([^\"]*)"$/ do |file, partial_content|
+When /file (?:named )?"([^\"]*)" should contain "([^\"]*)"$/\
+  do |file, partial_content|
   check_file_content(file, partial_content, true)
 end
 
 
-When /file "([^\"]*)" should contain:$/ do |file, partial_content|
+When /file (?:named )?"([^\"]*)" should contain:$/\
+  do |file, partial_content|
   check_file_content(file, partial_content, true)
 end
 
 
-When /file "([^\"]*)" should not contain "([^\"]*)"$/ do |file, partial_content|
+When /file (?:named )?"([^\"]*)" should not contain "([^\"]*)"$/\
+  do |file, partial_content|
   check_file_content(file, partial_content, false)
 end
 
 
-When /file "([^\"]*)" should not contain:$/ do |file, partial_content|
+When /file (?:named )?"([^\"]*)" should not contain:$/\
+  do |file, partial_content|
   check_file_content(file, partial_content, false)
 end
 
 
-When /file "([^\"]*)" should not match \/([^\/]*)\/$/ do |file, partial_content|
+When /file (?:named )?"([^\"]*)" should exist$/ do |file|
+  check_file_presence([file_name], true)
+end
+
+
+When /file (?:named )?"([^\"]*)" should not exist$/ do |file|
+  check_file_presence([file], false)
+end
+
+
+When /file (?:named )?"([^\"]*)" should not match \/([^\/]*)\/$/\
+  do |file, partial_content|
   check_file_content(file, /#{partial_content}/, false)
 end
 
 
-When /file "([^\"]*)" should match \/([^\/]*)\/$/ do |file, partial_content|
+When /file (?:named )?"([^\"]*)" should match \/([^\/]*)\/$/\
+  do |file, partial_content|
   check_file_content(file, /#{partial_content}/, true)
 end
 
@@ -146,7 +218,7 @@ end
 
 
 When /output should contain "([^\"]*)"$/ do |partial_output|
-  combined_output.should =~ regexp(partial_output)
+  assert_partial_output(partial_output)
 end
 
 
@@ -189,6 +261,11 @@ When /output should match:$/ do |partial_output|
 end
 
 
+When /overwrites? "([^\"]*)" with:$/ do |file_name, file_content|
+  create_file(file_name, file_content, true)
+end
+
+
 When /rebase the directory "()"$/ do |dir|
   rebase(dir.to_a)
 end
@@ -199,50 +276,45 @@ When /rebase the directory named "([^\"]*)"$/ do |dir|
 end
 
 
-When /run "(.*)"$/ do |cmd|
+When /removes? the file "([^\"]*)"$/ do |file_name|
+  remove_file(file_name)
+end
+
+
+When /runs? "(.*)"$/ do |cmd|
   run(unescape(cmd), false)
 end
 
 
-When /run "(.*)" interactively$/ do |cmd|
-  run_interactive(unescape(cmd))
-end
-
-
-When /run "(.*)" with errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
+When /runs? "(.*)" with errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
   do |cmd, time|
   run(unescape(cmd), false, time)
 end
 
-
-When /run "(.*)" with timeout of "(\d+\.?\d*)" seconds?$/ do |cmd, time|
-  run(unescape(cmd), true, time)
-end
-
-
-When /run "(.*)" without errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
+When /runs? "(.*)" without errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
   do |cmd, time|
   run(unescape(cmd), true, time)
 end
 
 
-When /set the env variable "([^\"]*)" to "(\d+\.?\d*)" seconds?$/ do |var, val|
-  ENV[var] = val
+When /runs? "([^\"]*)" interactively$/ do |cmd|
+  run_interactive(unescape(cmd))
+end
+
+
+When /(?:successfully )?runs? "(.*)" with timeout of "(\d+\.?\d*)" seconds??$/\
+  do |cmd, time|
+  run(unescape(cmd), true, time)
 end
 
 
 When /should (pass|fail) with:$/ do |pass_fail, partial_output|
-  When "output should contain:", partial_output
-  if pass_fail == 'pass'
-    @last_exit_status.should == 0
-  else
-    @last_exit_status.should_not == 0
-  end
+  self.__send__("assert_#{pass_fail}ing_with", partial_output)
 end
 
 
 When /should (pass|fail) with regexp?:$/ do |pass_fail, partial_output|
-  Then "the output should match:", partial_output
+  When "output should match:", partial_output
   if pass_fail == 'pass'
     @last_exit_status.should == 0
   else
@@ -253,6 +325,21 @@ end
 
 When /stderr should be empty$/ do
   @last_stderr.should == ""
+end
+
+
+When /stdout should be empty$/ do
+  @last_stdout.should == ""
+end
+
+
+When /stderr should not be empty$/ do
+  @last_stderr.should != ""
+end
+
+
+When /stdout should not be empty$/ do
+  @last_stdout.should != ""
 end
 
 
@@ -276,11 +363,16 @@ When /stdout should not contain "([^\"]*)"$/ do |partial_output|
 end
 
 
-When /type "([^\"]*)"$/ do |input|
+When /types? "([^\"]*)"$/ do |input|
   write_interactive(ensure_newline(input))
 end
 
 
 When /(?:use|using) a clean gemset "([^\"]*)"$/ do |gemset|
   use_clean_gemset(gemset)
+end
+  
+
+When /writes? to "([^\"]*)" with:$/ do |file_name, file_content|
+  create_file(file_name, file_content, false)
 end

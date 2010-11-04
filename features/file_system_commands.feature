@@ -122,6 +122,7 @@ Feature: file system commands
       HELLO WORLD
       """
 
+
   Scenario: @aruba-tmpdir flag runs scenario in tmp/aruba
     When I run "ruby -e \"require 'fileutils'; puts FileUtils.pwd\""
     Then the stdout should contain "tmp/aruba"
@@ -152,8 +153,8 @@ Feature: file system commands
       And I delete the cwd sub-directory named "rebase_test"
 
 
-  Scenario: Check file contents with regex
-    Given we do have a file named "foo" with:
+  Scenario: Check file contents with regexp
+    Given I do have a file named "foo" with:
       """
       hello world
       """
@@ -161,3 +162,10 @@ Feature: file system commands
     And the file "foo" should not match /HELLO WORLD/
 
 
+  Scenario: Remove file
+    Given I do have a file named "foo" with:
+      """
+      hello world
+      """
+    When I remove the file "foo"
+    Then the file "foo" should not exist

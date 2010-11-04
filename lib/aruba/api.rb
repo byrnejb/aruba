@@ -1,6 +1,6 @@
 require 'timeout'
-require 'tempfile'
 require 'rbconfig'
+require 'fileutils'
 require 'background_process'
 
 module Aruba
@@ -180,6 +180,7 @@ module Aruba
         end
       end
     end
+
 
     # check_exact_file_content veries that the specified file contains
     # exactly the provided text.
@@ -489,7 +490,8 @@ module Aruba
     end
 
     # original_env is an internal helper method that returns a hash of the
-    # original env variables and their values for use in restore_original_env
+    # env variables and their values. See: remove_env(), restore_env() and
+    # set_env().
     #
     def original_env
       @original_env ||= {}
@@ -567,8 +569,29 @@ module Aruba
       Regexp === string_or_regexp ? string_or_regexp : Regexp.compile(Regexp.escape(string_or_regexp))
     end
 
-    # restore_env is an internal helper method that restors the user's original
-    # environment at the completion of a scenario using Aruba.
+
+    # remove_env removes (unsets) the given environmental variable from
+    # the original working environment.  See restore_env() and set_env()
+    #
+    # Usage:
+    #   When /(?:delete|unset) the env variable "([^\"]*)"$/ do |var|
+    #     remove_env(var)
+    #   end
+    #
+    def remove_env(key)
+      original_env[key] = ENV.delete(key)
+    end
+
+    # remove file implements the rm command and removes the file whose name
+    # is given as the argument.
+    def remove_file(file_name)
+      in_current_dir do
+        FileUtils.rm(file_name)
+      end
+    end
+
+    # restore_env method restores the user's original environment at the 
+    # completion of a scenario using Aruba.  See set_env().
     #
     def restore_env
       original_env.each do |key, value|
@@ -660,12 +683,17 @@ module Aruba
       end
     end
 
-    # set_env(key, value) is an internal helper method that sets a hash of the
-    # original env variables and their values for restore_original_env
+    # set_env method permits setting of environment variables for aruba
+    # run commands. See restore_env() and remove_env().
     #
+    # Usage:
+    #   When /(?:add|set) the env variable "([^\"]*)" to "(.*)"$/ do |var, val|
+    #     set_env(var, val)
+    #   end
+    #   
     def set_env(key, value)
       announce_or_puts(%{$ export #{key}="#{value}"}) if @announce_env
-      original_env[key] = ENV.delete(key)
+      remove_env(key)
       ENV[key] = value
     end
 

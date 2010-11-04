@@ -11,13 +11,14 @@ tmtags
 .\#*
 
 ## VIM
-*.swp
+*swp
+*swpo
 
 ## PROJECT::GENERAL
-*.gem
 coverage
-rdoc
+*gem
 pkg
+rdoc
 
 ## PROJECT::SPECIFIC
 tmp

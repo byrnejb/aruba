@@ -1,3 +1,4 @@
+@timeout
 Feature: process should timeout
 
   In order to prevent test runs from suspending indefinitiely

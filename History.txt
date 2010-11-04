@@ -1,3 +1,10 @@
+== 0.2.6.12 jbb
+* merged aslak 0.2.4
+* added remove_env to api
+* update api documentation
+* revised run steps
+
+
 == 0.2.6.11 jbb
 * administrative fix to gemspec data and dependencies 
 * added NO_ARUBA_STEPS env var to not load aruba/cucumber_steps.rb library (exp)
@@ -51,8 +58,15 @@
 * Expanded directory and file detection self-test cross-check. (JBB)
 
 
+== 0.2.4
+
+=== New Features
+* Added step definitions for removing files and checking presence of a single file. (Aslak Hellesøy)
+
+
 == 0.2.3 jbb
 * Fixed no directories step error and added scenario to test this
+
 
 == 0.2.3 aslak
 
@@ -71,6 +85,7 @@
 * Added rebase method to api and associated tags (JBB)
 * Forked from Aruba 0.2.1 and renamed to aruba-jbb (JBB)
 * Removed unnecessary dependencies on cucumber and rspec beta versions. (JBB)
+
 
 == 0.2.2 aslak
 
