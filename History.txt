@@ -1,3 +1,12 @@
+== 0.2.6.13 jbb
+* added new api methods
+* refactored matchers for new api methods
+* added additional tests for stderr and stdout matchers
+
+== Bug fixes
+* fixed rspec syntax (no #should != instead must use #should_not ==)
+* fixed some documentation errors and omissions
+
 == 0.2.6.12 jbb
 * merged aslak 0.2.4
 * added remove_env to api

@@ -2,9 +2,9 @@
 
 Gem::Specification.new do |s|
   s.name = %q{aruba-jbb}
-  s.version = "0.2.6.12"
+  s.version = "0.2.6.13"
   s.authors = ["Aslak Hellesøy", "David Chelimsky", "James B. Byrne", "Mike Sassak"]
-  s.date = %q{2010-11-04}
+  s.date = %q{2010-11-09}
   s.description = %q{Fork of Aruba, Cucumber steps for testing CLI applications.}
   s.email = %q{cukes@googlegroups.com}
   s.homepage = %q{http://github.com/byrnejb/aruba}
