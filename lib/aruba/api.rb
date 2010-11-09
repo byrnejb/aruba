@@ -81,11 +81,44 @@ module Aruba
       end
     end
 
-    # assert_exit_status_and_partial_output is an internal helper
-    # method that really should not be used in a step definition.
+    # assert_exact_output compares the contents of the combined output
+    # for an exact match to the argument.  See assert_partial_output.
+    # #
+    def assert_exact_output(exact_output)
+      combined_output.should == exact_output
+    end
+
+    # assert_exit_status_and_output checks the contents of the combined output
+    # (exact) and also checks the exit status against the expected (zero or
+    # non-zero)
+    #
+    # Usage:
+    #   Then /should (pass|fail) with exactly:$/ do |pass_fail, exact_output|
+    #     assert_exit_status_and_output(pass_fail == "pass", exact_output, true)
+    #
+    def assert_exit_status_and_output(expect_to_pass, output, expect_exact_output)
+      if expect_exact_output
+        assert_exact_output(output)
+      else
+        assert_partial_output(output)
+      end
+      assert_exiting_with(expect_to_pass)
+    end
+    
+
+    # assert_exit_status_and_partial_output checks the contents of the combined
+    # output (partial) and also checks the exit status against the expected
+    # (zero or non-zero)
     #
     def assert_exit_status_and_partial_output(expect_to_pass, partial_output)
       assert_partial_output(partial_output)
+      assert_exiting_with(expect_to_pass)
+    end
+
+    # assert_exiting_with checks the exit status and fails if
+    # the expected condition is not met.
+    #
+    def assert_exiting_with(expect_to_pass)
       if expect_to_pass
         @last_exit_status.should == 0
       else
