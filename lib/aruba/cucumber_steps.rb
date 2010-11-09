@@ -310,7 +310,6 @@ end
 
 When /should (pass|fail) with:$/ do |pass_fail, partial_output|
   assert_exit_status_and_output(pass_fail == "pass", partial_output, false)
-  #self.__send__("assert_#{pass_fail}ing_with", partial_output)
 end
 
 
