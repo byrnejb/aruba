@@ -309,7 +309,13 @@ end
 
 
 When /should (pass|fail) with:$/ do |pass_fail, partial_output|
-  self.__send__("assert_#{pass_fail}ing_with", partial_output)
+  assert_exit_status_and_output(pass_fail == "pass", partial_output, false)
+  #self.__send__("assert_#{pass_fail}ing_with", partial_output)
+end
+
+
+Then /should (pass|fail) with exactly:$/ do |pass_fail, exact_output|
+  assert_exit_status_and_output(pass_fail == "pass", exact_output, true)
 end
 
 
@@ -334,12 +340,12 @@ end
 
 
 When /stderr should not be empty$/ do
-  @last_stderr.should != ""
+  @last_stderr.should_not == ""
 end
 
 
 When /stdout should not be empty$/ do
-  @last_stdout.should != ""
+  @last_stdout.should_not == ""
 end
 
 
@@ -350,6 +356,16 @@ end
 
 When /stdout should contain "([^\"]*)"$/ do |partial_output|
   @last_stdout.should =~ regexp(partial_output)
+end
+
+
+Then /stderr should contain exactly:$/ do |exact_output|
+  @last_stderr.should == exact_output
+end
+
+
+Then /stdout should contain exactly:$/ do |exact_output|
+  @last_stdout.should == exact_output
 end
 
 

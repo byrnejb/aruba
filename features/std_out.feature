@@ -15,3 +15,21 @@ Feature: run command should not limit size of STDOUT
     Then the stdout should contain "bbbbb"
     When I run "ruby -e 'puts :c.to_s * 65537'"
     Then the stdout should contain "ccccc"
+
+  @announce
+  Scenario: Check empty output
+    When I run "ruby -e 'r = 1 + 3'"
+    Then stdout should be empty
+      And stderr should be empty
+
+  @announce
+  Scenario: Check not empty output
+    When I run "ruby -e 'puts( %Q*Hello World!* )'"
+    Then stdout should not be empty
+      And stderr should be empty
+
+  @announce
+  Scenario: Check not empty error
+    When I run "ruby -e 'fail'"
+    Then stdout should be empty
+      And stderr should not be empty
