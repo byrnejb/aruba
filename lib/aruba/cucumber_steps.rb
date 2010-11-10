@@ -113,28 +113,33 @@ end
 
 
 When /display stdout/ do
-  announce_or_puts(last_stdout)
+  announce_or_puts( last_stdout )
 end
 
 
 When /using a clean gemset "([^\"]*)"$/ do |gemset|
-  use_clean_gemset(gemset)
+  use_clean_gemset( gemset )
 end
 
 
 When /do(?:es)? have (?:a|the) directory named "([^\"]*)"$/ do |dir_name|
-  create_dir(dir_name)
+  create_dir( dir_name )
+end
+
+
+When /do(?:es)? have (?:a|the) file named "([^\"]*)"$/ do |file_name|
+  create_file( file_name, "" )
 end
 
 
 When /do(?:es)? have (?:a|the) file named "([^\"]*)" (?:containing|with):$/ \
   do |file_name, file_content|
-  create_file(file_name, file_content)
+  create_file( file_name, file_content )
 end
 
 
 When /do(?:es)? have an empty file named "([^\"]*)"$/ do |file_name|
-  create_file(file_name, "")
+  create_file( file_name, "" )
 end
 
 

@@ -22,10 +22,10 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["LICENSE", "README.rdoc", "History.txt"]
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
-  s.post_install_message = %Q{
+  s.post_install_message = %Q(
   Please check the History.txt and README.rdoc files for the latest
-  information regarding this release (#{s.version).  The api now
+  information regarding this release #{s.version}.  The api now
   contains some documentation but you should also check the contents of 
   lib/aruba/cucumber_steps.rb for working examples.
-  }
+  )
 end

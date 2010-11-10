@@ -1,3 +1,7 @@
+== git HEAD jbb
+* added simple have file matcher and test for same
+* added post install text in gemspec
+
 == 0.2.6.13 jbb
 * added new api methods
 * refactored matchers for new api methods

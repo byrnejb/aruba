@@ -8,8 +8,14 @@ Feature: file system commands
     Given I do have a directory named "foo/bar"
     When I run "ruby -e \"puts test ?d, 'foo'\""
     Then the stdout should contain "true"
+
   
   Scenario: create a file
+    Given I do have a file named "bar/foo"
+    When I run "ruby -e \"puts test ?f, 'bar/foo'\""
+    Then the stdout should contain "true"
+  
+  Scenario: create a file with content
     Given I do have a file named "foo/bar/example.rb" with:
       """
       puts "hello world"
