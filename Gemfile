@@ -1,7 +1,5 @@
 source "http://rubygems.org"
-gemspec
-
-gem 'builder', "2.1.2"
+gemspec  # get gem list from gemspec file.
 
 # Use source from sibling folders (if available) instead of gems
 # %w[cucumber].each do |g|
