@@ -1,4 +1,5 @@
-== git HEAD jbb
+== 0.2.6.14 jbb
+* restricted generalilty of "types" step_defintion
 * added simple have file matcher and test for same
 * added post install text in gemspec
 

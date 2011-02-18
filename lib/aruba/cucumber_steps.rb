@@ -383,7 +383,7 @@ When /stdout should not contain "([^\"]*)"$/ do |partial_output|
 end
 
 
-When /types? "([^\"]*)"$/ do |input|
+When /(?:inputs?|types? in) "([^\"]*)"$/ do |input|
   write_interactive(ensure_newline(input))
 end
 

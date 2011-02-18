@@ -13,8 +13,8 @@ Feature: Interactive process control
       end
       """
     When I run "ruby echo.rb" interactively
-    And I type "hello, world"
-    And I type "quit"
+    And I type in "hello, world"
+    And I type in "quit"
     Then the output should contain:
       """
       dlrow ,olleh
@@ -22,8 +22,8 @@ Feature: Interactive process control
 
   Scenario: Running a native binary interactively
     When I run "bc -q" interactively
-    And I type "4 + 3"
-    And I type "quit"
+    And I type in "4 + 3"
+    And I type in "quit"
     Then the output should contain:
       """
       7

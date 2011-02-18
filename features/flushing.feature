@@ -19,7 +19,7 @@ Feature: Flushing output
   
   Scenario: Interactive Stdout should equal output length plus \n
     When I run "ruby -e 'len = gets.chomp; puts :a.to_s * len.to_i'" interactively
-    And I type "65536"
+    And I type in "65536"
     Then the output should contain "a"
     And the output should be at least "65536" bytes long
 
