@@ -10,11 +10,7 @@ module Aruba
     # reproducing test process output in the Aruba run.
     #
     def announce_or_puts(msg)
-      if(@puts)
-        puts(msg)
-      else
-        announce(msg)
-      end
+      puts(msg)
     end
 
     # append_to_file is used to add data to the end of a

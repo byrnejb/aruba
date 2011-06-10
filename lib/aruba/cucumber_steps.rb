@@ -82,7 +82,8 @@ After do
 end
 
 
-When /(?:add|set) the env variable "([^\"]*)" to "(.*)"/ do |var, val|
+When /(?:add|set) the env(?:ironment)? variable "([^\"]*)" to "(.*)"/ \
+  do |var, val|
   set_env(var, val)
 end
 
@@ -107,7 +108,7 @@ When /display stderr/ do
 end
 
 
-When /(?:delete|unset) the env variable "([^\"]*)"$/ do |var|
+When /(?:delete|unset) the env(?:ironment)? variable "([^\"]*)"$/ do |var|
   remove_env(var)
 end
 
@@ -291,14 +292,10 @@ When /runs? "(.*)"$/ do |cmd|
 end
 
 
-When /runs? "(.*)" with errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
-  do |cmd, time|
-  run(unescape(cmd), false, time)
-end
-
-When /runs? "(.*)" without errors?(?: and timeout of "(\d+\.?\d*)" seconds?)?$/\
-  do |cmd, time|
-  run(unescape(cmd), true, time)
+When /runs? "(.*)" with(out)? errors?(?:(?: and)?(?: with)? timeout of "(\d+\.?\d*)" seconds?)?$/\
+  do |cmd, yn, time|
+  expected = !!yn
+  run(unescape(cmd), expected, time)
 end
 
 

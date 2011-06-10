@@ -1,3 +1,7 @@
+== 0.2.7.01 jbb
+* removed call to deprecated announce method
+* refactored run with timeout step definition
+
 == 0.2.6.14 jbb
 * restricted generalilty of "types" step_defintion
 * added simple have file matcher and test for same
@@ -17,7 +21,6 @@
 * added remove_env to api
 * update api documentation
 * revised run steps
-
 
 == 0.2.6.11 jbb
 * administrative fix to gemspec data and dependencies 

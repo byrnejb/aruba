@@ -2,9 +2,9 @@
 
 Gem::Specification.new do |s|
   s.name = %q{aruba-jbb}
-  s.version = "0.2.6.14"
+  s.version = "0.2.7.01"
   s.authors = ["Aslak Hellesøy", "David Chelimsky", "James B. Byrne", "Mike Sassak"]
-  s.date = %q{2011-02-18}
+  s.date = %q{2011-06-10}
   s.description = %q{Fork of Aruba, Cucumber steps for testing CLI applications.}
   s.email = %q{cukes@googlegroups.com}
   s.homepage = %q{http://github.com/byrnejb/aruba}
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary = %q{Cucumber steps for testing external processes from the CLI}
 
   s.add_dependency 'builder', '>= 2.0.0'
-  s.add_dependency 'cucumber', '>= 0.9.3'
+  s.add_dependency 'cucumber', '>= 0.10.3'
   s.add_dependency 'background_process' # Can't specify a version - bundler/rubygems chokes on '2.1'
   s.add_development_dependency 'rspec', '>= 2.0.0'
 
